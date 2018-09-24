@@ -2,12 +2,11 @@ package ka.masato.library.device.pasori;
 
 import android.hardware.usb.*;
 import android.os.Handler;
+import ka.masato.library.device.pasori.callback.PasoriReadCallback;
 import ka.masato.library.device.pasori.enums.CardType;
-import ka.masato.library.device.pasori.exception.PasoriNotInitializedException;
+import ka.masato.library.device.pasori.exception.*;
 import ka.masato.library.device.pasori.model.CardRecord;
 import ka.masato.library.device.pasori.model.TypeFCardRecord;
-import ka.masato.library.device.pasori.exception.FailedTransferCommandException;
-import ka.masato.library.device.pasori.exception.IlligalCardTypeException;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -41,12 +40,18 @@ public class PasoriReader {
             @Override
             public void run() {
                 if(!isStartRead)return;
-                byte[] reulst = readCardData(rfCardType);
-                //41,5,-128,0,0
-                CardRecord mCardRecord = null;
-                if(rfCardType == CardType.F) mCardRecord = new TypeFCardRecord();
-                mCallback.getResult(mCardRecord);
-                pasoriHandler.postDelayed(this,periodicalMiliTime);
+                byte[] result = readCardData(rfCardType);
+
+                if (result[0] == (byte) 0x29 && result[1] == 0x05 && result[2] == 0x80) {
+                    //No IC card.
+                    //41,5,-128,0,0
+                } else {
+                    //Get result.
+                    CardRecord mCardRecord = null;
+                    if (rfCardType == CardType.F) mCardRecord = new TypeFCardRecord();
+                    mCallback.recieved(mCardRecord);
+                    pasoriHandler.postDelayed(this, periodicalMiliTime);
+                }
             }
 
         };
@@ -67,7 +72,7 @@ public class PasoriReader {
         return HasInstance.mPasoriReader;
     }
 
-    public boolean initializeDevice(UsbManager mUsbManager, CardType cardType){
+    public boolean initializeDevice(UsbManager mUsbManager, CardType cardType) throws PasoriDeviceNotFoundException {
         if(isInitialized){
             return false;
         }
@@ -85,7 +90,7 @@ public class PasoriReader {
         return true;
     }
 
-    private void initUsbDevice(UsbManager mUsbManager) {
+    private void initUsbDevice(UsbManager mUsbManager) throws PasoriDeviceNotFoundException {
         HashMap<String, UsbDevice> devices = mUsbManager.getDeviceList();
         devices.forEach((key, value)-> {
             if (value.getVendorId()==1356 && value.getProductId()==1731) {
@@ -94,15 +99,15 @@ public class PasoriReader {
         });
 
         if (rcs380 == null) {
-            return;
+            throw new PasoriDeviceNotFoundException("Not found pasori card reader on your device USB port.");
         }
         mUsbdeviceConnection = mUsbManager.openDevice(rcs380);
         if (mUsbdeviceConnection == null) {
-            return;
+            throw new PasoriFailedInitializedException("Failed open your pasori card reader.");
         }
         if (!mUsbdeviceConnection.claimInterface(rcs380.getInterface(0), true)) {
             mUsbdeviceConnection.close();
-            return;
+            throw new PasoriFailedInitializedException("Can not get pasori interface.");
         }
 
         for (int index =0; index < rcs380.getInterface(0).getEndpointCount(); index++){
@@ -117,18 +122,15 @@ public class PasoriReader {
 
         }
 
-        if(mInUsbEndpoint == null){
-            return;
-        }
-        if(mOutUsbEndpoint == null){
-            return ;
+        if (mInUsbEndpoint == null || mOutUsbEndpoint == null) {
+            throw new PasoriDeviceNotFoundException("Can not get usb endpoint.");
         }
     }
 
     private boolean resetPasoriDevice() {
         byte[] initial = {(byte)0x00,(byte)0x00,(byte)0xff,(byte)0x00,(byte)0xff,(byte)0x00};
         if (mUsbdeviceConnection.bulkTransfer(mOutUsbEndpoint, initial, initial.length, 100) != initial.length) {
-            return false;
+            throw new FailedTransferCommandException("Failed transfer reset command.");
         }
         return true;
     }
@@ -148,6 +150,9 @@ public class PasoriReader {
 
     public void setSwitchRF(byte mode){
         //TODO CHECK mode
+        if (mode != (byte) 0x00 && mode != (byte) 0x01) {
+            throw new IlligalParameterTypeException("setSwitch parameter must be 0x00 or 0x01");
+        }
         byte[] switchRF = {(byte)0x06, mode};
         transferCommand(switchRF, switchRF.length);
     }
@@ -157,7 +162,7 @@ public class PasoriReader {
         if (rfType == CardType.F)cmd.put(new byte[] {(byte)0x00, 0x01, 0x01, 0x0f, 0x01});
         else if (rfType == CardType.A)cmd.put(new byte[] {(byte)0x00, 0x02, 0x03, 0x0F, 0x03});
         else if (rfType == CardType.B)cmd.put(new byte[] {(byte)0x00, 0x03, 0x07, 0x0F, 0x07});
-        else throw new IlligalCardTypeException("Card type accept A or B, F");
+        else throw new IlligalParameterTypeException("Card type accept A or B, F");
         transferCommand(cmd.array(), cmd.array().length);
     }
 
@@ -177,7 +182,7 @@ public class PasoriReader {
         if(rfType == CardType.A) cmd = ByteBuffer.wrap(new byte[] {(byte)0x02,0x00,0x06,0x01,0x00,0x02,0x00,0x05,0x01,0x07,0x07});
         if(rfType == CardType.B) cmd = ByteBuffer.wrap(new byte[] {(byte)0x02,0x00,0x14,0x09,0x01,0x0a,0x01,0x0b,0x01,0x0c,0x01});
         if (cmd==null) {
-            throw new IlligalCardTypeException("Card type accept A or B, F");
+            throw new IlligalParameterTypeException("Card type accept A or B, F");
         }
         transferCommand(cmd.array(), cmd.array().length);
     }
@@ -188,7 +193,7 @@ public class PasoriReader {
         if(rfType == CardType.B) cmd = ByteBuffer.wrap(new byte[] {(byte)0x04,0x6e,0x00,0x05,0x00,0x10});
         if(rfType == CardType.A) cmd = ByteBuffer.wrap(new byte[] {(byte)0x04,0x6e,0x00,0x26});
         if (cmd==null) {
-            throw new IlligalCardTypeException("Card type accept A or B, F");
+            throw new IlligalParameterTypeException("Card type accept A or B, F");
         }
         byte[] result = transferCommand(cmd.array(), cmd.array().length);
         return result;
@@ -197,7 +202,6 @@ public class PasoriReader {
     private byte[] transferCommand(byte[] cmd, int cmd_length){
         byte[] temp = new byte[64];
         byte[] buf = new byte[cmd_length+11];
-
 
         buf[0] = (byte)0x0 ; buf[1] = (byte)0x0; buf[2] = (byte) 0xFF;
         buf[3] = (byte)0xFF; buf[4] = (byte)0xFF;
@@ -216,7 +220,7 @@ public class PasoriReader {
         buf[cmd_length+10] = (byte)0x00;
 
         if (mUsbdeviceConnection.bulkTransfer(mOutUsbEndpoint, buf, buf.length, 100) != buf.length) {
-            throw new FailedTransferCommandException("Failed send command.");
+            throw new FailedTransferCommandException("Failed transfer command.");
         }
 
         int retCode = mUsbdeviceConnection.bulkTransfer(mInUsbEndpoint, temp, temp.length, 100);

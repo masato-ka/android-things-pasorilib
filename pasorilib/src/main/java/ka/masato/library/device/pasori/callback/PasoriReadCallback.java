@@ -1,9 +1,9 @@
-package ka.masato.library.device.pasori;
+package ka.masato.library.device.pasori.callback;
 
 import ka.masato.library.device.pasori.model.CardRecord;
 
 public abstract class PasoriReadCallback {
-    public void getResult(CardRecord card){
+    public void recieved(CardRecord result) {
 
     }
 }
