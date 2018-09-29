@@ -7,6 +7,7 @@ import ka.masato.library.device.pasori.enums.CardType;
 import ka.masato.library.device.pasori.exception.*;
 import ka.masato.library.device.pasori.model.CardRecord;
 import ka.masato.library.device.pasori.model.TypeFCardRecord;
+import ka.masato.library.device.pasori.service.CardDataDecoder;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -47,7 +48,7 @@ public class PasoriReader {
                     //41,5,-128,0,0
                 } else {
                     //Get result.
-                    CardRecord mCardRecord = null;
+                    CardRecord mCardRecord = CardDataDecoder.TypeFdecode(result);
                     if (rfCardType == CardType.F) mCardRecord = new TypeFCardRecord();
                     mCallback.recieved(mCardRecord);
                     pasoriHandler.postDelayed(this, periodicalMiliTime);
