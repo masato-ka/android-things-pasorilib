@@ -1,12 +1,12 @@
 package ka.masato.library.device.pasori.service;
 
 import ka.masato.library.device.pasori.exception.CardDataDecodeErrorException;
+import ka.masato.library.device.pasori.exception.IlligalCardDataException;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 public class CardDataDecoder {
-
     private String IDmString = "";
     private String PMmString = "";
     private byte[] cmdPayload;
@@ -66,6 +66,10 @@ public class CardDataDecoder {
         return PMmString;
     }
 
+    public byte[] getCmdPayload() {
+        return cmdPayload;
+    }
+
     private String convertBytes2String(byte[] bytes) {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < bytes.length; i++) {
@@ -76,14 +80,16 @@ public class CardDataDecoder {
 
     private byte[] extractCmdPayload(byte[] packet) {
         if (packet.length <= 10) {
+            throw new IlligalCardDataException("Can not load packet, because packet length illigal.");
+
             //TODO Throw Exception.
         }
         short length = ByteBuffer.wrap(new byte[]{packet[5], packet[6]})
                 .order(ByteOrder.LITTLE_ENDIAN).getShort();
         ByteBuffer bb = ByteBuffer.wrap(packet);
         //9 is header length , and 10 is footer length
-        byte[] result = new byte[length];
-        bb.get(result, 9, length - 10);
+        byte[] result = new byte[length];//NegativeArraySizeException
+        bb.get(result, 9, length - 10);//IndexOutOfBoundsException
         return result;
     }
 

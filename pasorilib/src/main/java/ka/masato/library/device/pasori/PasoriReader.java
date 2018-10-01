@@ -6,8 +6,6 @@ import ka.masato.library.device.pasori.callback.PasoriReadCallback;
 import ka.masato.library.device.pasori.enums.CardType;
 import ka.masato.library.device.pasori.exception.*;
 import ka.masato.library.device.pasori.model.CardRecord;
-import ka.masato.library.device.pasori.model.TypeFCardRecord;
-import ka.masato.library.device.pasori.service.CardDataDecoder;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -27,11 +25,11 @@ public class PasoriReader {
     private PasoriReader(){}
 
 
-    public void startRead(Handler pasoriHandler, PasoriReadCallback mCallback){
-        startRead(pasoriHandler, mCallback, 1000L);
+    public void startPolling(Handler pasoriHandler, PasoriReadCallback mCallback) {
+        startPolling(pasoriHandler, mCallback, 1000L);
     }
 
-    public void startRead(Handler pasoriHandler, PasoriReadCallback mCallback, Long periodicalMiliTime) {
+    public void startPolling(Handler pasoriHandler, PasoriReadCallback mCallback, Long periodicalMiliTime) {
 
         if(!isInitialized){
             throw new PasoriNotInitializedException("Should be initialized pasori object before startRead");
@@ -41,16 +39,16 @@ public class PasoriReader {
             @Override
             public void run() {
                 if(!isStartRead)return;
-                byte[] result = readCardData(rfCardType);
+                byte[] result = pollingNFC(rfCardType, 110);
 
                 if (result[0] == (byte) 0x29 && result[1] == 0x05 && result[2] == 0x80) {
                     //No IC card.
                     //41,5,-128,0,0
                 } else {
                     //Get result.
-                    CardRecord mCardRecord = CardDataDecoder.TypeFdecode(result);
-                    if (rfCardType == CardType.F) mCardRecord = new TypeFCardRecord();
-                    mCallback.recieved(mCardRecord);
+                    CardRecord mCardRecord = null;//CardDataDecoder.TypeFdecode(result);
+                    //if (rfCardType == CardType.F) mCardRecord = new TypeFCardRecord();
+                    mCallback.pollingRecieve("", "");
                     pasoriHandler.postDelayed(this, periodicalMiliTime);
                 }
             }
@@ -60,7 +58,7 @@ public class PasoriReader {
         pasoriHandler.post(runnable);
     }
 
-    public void stop() {
+    public void stopPolling() {
         isStartRead = false;
     }
 
@@ -188,16 +186,39 @@ public class PasoriReader {
         transferCommand(cmd.array(), cmd.array().length);
     }
 
-    public byte[] readCardData(CardType rfType){
+    public byte[] pollingNFC(CardType rfType, int timeout) {
+
+
         ByteBuffer cmd = null;
-        if(rfType == CardType.F) cmd = ByteBuffer.wrap(new byte[] {(byte)0x04,0x6e,0x00,0x06,0x00, (byte) 0xFF, (byte) 0xFF,0x01,0x00});
-        if(rfType == CardType.B) cmd = ByteBuffer.wrap(new byte[] {(byte)0x04,0x6e,0x00,0x05,0x00,0x10});
-        if(rfType == CardType.A) cmd = ByteBuffer.wrap(new byte[] {(byte)0x04,0x6e,0x00,0x26});
+        if (rfType == CardType.F) cmd = buildRfCommand(new byte[]{0x00, (byte) 0xFF, (byte) 0xFF, 0x01, 0x00}, timeout);
+        if (rfType == CardType.B) cmd = buildRfCommand(new byte[]{(byte) 0x00, 0x10}, timeout);
+        //if(rfType == CardType.A) cmd = buildRfCommand(new byte[] {(byte)0x04,0x6e,0x00,0x26}, timeout);
         if (cmd==null) {
             throw new IlligalParameterTypeException("Card type accept A or B, F");
         }
         byte[] result = transferCommand(cmd.array(), cmd.array().length);
         return result;
+    }
+
+
+    private ByteBuffer buildRfCommand(byte[] nfcCommand, int timeout) {
+        ByteBuffer buildResult = null;
+
+        //devicecomm , timeout(2), (data_length+1), nfc_command(5)
+        byte[] header = new byte[4];
+        timeout = timeout >= 65535 ? 65535 : timeout;
+        timeout = timeout <= 0 ? 0 : timeout;
+        header[0] = (byte) 0x04;
+        header[1] = (byte) ((byte) 0xFF & (timeout));
+        header[2] = (byte) (((timeout) >> 8) & (byte) 0xFF);
+
+        int length_size = 1;
+        header[3] = (byte) ((byte) 0xFF & (nfcCommand.length + length_size));
+        buildResult = ByteBuffer.allocate(nfcCommand.length + 4);
+        buildResult.put(header);
+        buildResult.put(nfcCommand);
+
+        return buildResult;
     }
 
     private byte[] transferCommand(byte[] cmd, int cmd_length){
