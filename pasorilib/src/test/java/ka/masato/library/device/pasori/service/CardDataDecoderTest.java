@@ -58,7 +58,7 @@ public class CardDataDecoderTest {
                 (byte) 0x00 // end
         };
 
-        byte[] result = target.laodPacket(testData).getCmdPayload();
+        //   byte[] result = target.laodPacket(testData).getCmdPayload();
         //assertThat(result, )
 
     }

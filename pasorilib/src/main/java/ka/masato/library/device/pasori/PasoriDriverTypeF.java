@@ -50,7 +50,7 @@ public class PasoriDriverTypeF extends AbstractPasoriDriver {
                 if (!isStartRead) return;
                 byte[] result = pollingNFC(110);
 
-                if (result[0] == (byte) 0x29 && result[1] == 0x05 && result[2] == 0x80) {
+                if (result[0] == (byte) 0x29 && result[1] == (byte) 0x05 && result[2] == (byte) 0x80) {
                     //No IC card.
                     //41,5,-128,0,0
                 } else {
@@ -73,7 +73,7 @@ public class PasoriDriverTypeF extends AbstractPasoriDriver {
 
     public byte[] pollingNFC(int timeout) {
 
-
+        //TODO 戻り値チェックすること。
         ByteBuffer cmd = null;
         cmd = buildRfCommand(new byte[]{0x00, (byte) 0xFF, (byte) 0xFF, 0x01, 0x00}, timeout);
         //if (rfType == CardType.B) cmd = buildRfCommand(new byte[]{(byte) 0x00, 0x10}, timeout);
@@ -81,7 +81,16 @@ public class PasoriDriverTypeF extends AbstractPasoriDriver {
         if (cmd == null) {
             throw new IlligalParameterTypeException("Card type accept A or B, F");
         }
-        byte[] result = this.usbPasoriDriver.transferCommand(cmd.array(), cmd.array().length);
+        byte[] getPayload = this.usbPasoriDriver.transferCommand(cmd.array(), cmd.array().length);
+        byte[] result = new byte[getPayload.length - 6];//6 is header of PasoriDeviceMessage.
+        if (getPayload[0] == (byte) 0xD7 && getPayload[1] == (byte) 0x04 + 1) {
+            if (getPayload[2] == (byte) 0x00 &&
+                    getPayload[3] == (byte) 0x00 &&
+                    getPayload[4] == (byte) 0x00 &&
+                    getPayload[5] == (byte) 0x00) {
+                ByteBuffer.wrap(getPayload, 6, getPayload.length - 6).get(result);
+            }
+        }
         return result;
     }
 

@@ -71,7 +71,7 @@ public class UsbPasoriDriver {
     }
 
     public boolean bulkTransferSend(byte[] data, int length, int timeout) {
-        if (isInitialized) {
+        if (!isInitialized) {
             throw new FailedTransferCommandException("Can not bulkTransfer before initialized");
         }
         if (mUsbdeviceConnection.bulkTransfer(mOutUsbEndpoint, data, length, timeout) != length) {
@@ -81,10 +81,10 @@ public class UsbPasoriDriver {
     }
 
     public int bulkTransferRecv(byte[] buffer, int length, int timeout) {
-        if (isInitialized) {
+        if (!isInitialized) {
             throw new FailedTransferCommandException("Can not bulkTransfer before initialized.");
         }
-        int retCode = mUsbdeviceConnection.bulkTransfer(mOutUsbEndpoint, buffer, length, timeout);
+        int retCode = mUsbdeviceConnection.bulkTransfer(mInUsbEndpoint, buffer, length, timeout);
         return retCode;
     }
 
@@ -93,7 +93,7 @@ public class UsbPasoriDriver {
         byte[] buf = buildUsbTransferMessage(cmd, cmd_length);
 
         //send command
-        if (bulkTransferSend(buf, buf.length, 100)) {
+        if (!bulkTransferSend(buf, buf.length, 100)) {
             throw new FailedTransferCommandException("Failed transfer command.");
         }
 
