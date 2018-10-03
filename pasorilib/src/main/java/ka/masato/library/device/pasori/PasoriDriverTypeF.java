@@ -50,12 +50,12 @@ public class PasoriDriverTypeF extends AbstractPasoriDriver {
                 if (!isStartRead) return;
                 byte[] result = pollingNFC(110);
 
-                if (result[0] == (byte) 0x29 && result[1] == (byte) 0x05 && result[2] == (byte) 0x80) {
+                if (result.length <= 0) {
                     //No IC card.
                     //41,5,-128,0,0
                 } else {
                     //Get result.
-                    cardDataDecoder.laodPacket(result).decodeIDm().decodePMm();
+                    cardDataDecoder.loadPacket(result).decodeIDm().decodePMm();
                     mCallback.pollingRecieve(cardDataDecoder.getIDm(), cardDataDecoder.getPMm());
                     pasoriHandler.postDelayed(this, periodicalMiliTime);
                 }

@@ -4,7 +4,6 @@ import ka.masato.library.device.pasori.exception.CardDataDecodeErrorException;
 import ka.masato.library.device.pasori.exception.IlligalCardDataException;
 
 import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 
 public class CardDataDecoder {
     private String IDmString = "";
@@ -16,7 +15,7 @@ public class CardDataDecoder {
     }
 
 
-    public CardDataDecoder laodPacket(byte[] packet) {
+    public CardDataDecoder loadPacket(byte[] packet) {
         cmdPayload = extractCmdPayload(packet);
         return this;
     }
@@ -26,17 +25,15 @@ public class CardDataDecoder {
         if (cmdPayload == null) {
             throw new CardDataDecodeErrorException("Should not decode before load packet function.");
         }
-
-        if (cmdPayload[6] == (byte) 0x14 && cmdPayload[7] == (byte) 0x01) {
-            ByteBuffer bb = ByteBuffer.wrap(cmdPayload);
-            byte[] idm = new byte[8];
-            bb.get(idm, 8, 8);
-            IDmString = convertBytes2String(idm);
-        } else {
+        if (cmdPayload[0] != (byte) 0x01) {
             //TODO Runtime exception is better.
             throw new CardDataDecodeErrorException("Illigal cmd payload, can not decode IDm");
         }
 
+        ByteBuffer bb = ByteBuffer.wrap(cmdPayload);
+        byte[] idm = new byte[8];
+        bb.get(idm, 3, 8);
+        IDmString = convertBytes2String(idm);
         return this;
     }
 
@@ -45,16 +42,15 @@ public class CardDataDecoder {
         if (cmdPayload == null) {
             throw new CardDataDecodeErrorException("Shoud not decode begore load packet function.");
         }
-
-        if (cmdPayload[6] == (byte) 0x14 && cmdPayload[7] == (byte) 0x01) {
-            ByteBuffer bb = ByteBuffer.wrap(cmdPayload);
-            byte[] ppm = new byte[8];
-            bb.get(ppm, 16, 8);
-            PMmString = convertBytes2String(ppm);
-        } else {
-            throw new CardDataDecodeErrorException("Illigal cmd payload can not decode IDm");
+        if (cmdPayload[0] != (byte) 0x01) {
+            //TODO Runtime exception is better.
+            throw new CardDataDecodeErrorException("Illigal cmd payload, can not decode PMm");
         }
 
+        ByteBuffer bb = ByteBuffer.wrap(cmdPayload);
+        byte[] ppm = new byte[8];
+        bb.get(ppm, 12, 8);
+        PMmString = convertBytes2String(ppm);
         return this;
     }
 
@@ -79,17 +75,20 @@ public class CardDataDecoder {
     }
 
     private byte[] extractCmdPayload(byte[] packet) {
-        if (packet.length <= 10) {
+        int lengthSizeByte = 1;
+        if (packet.length <= 2) {// TODO please change check logic.
             throw new IlligalCardDataException("Can not load packet, because packet length illigal.");
-
-            //TODO Throw Exception.
         }
-        short length = ByteBuffer.wrap(new byte[]{packet[5], packet[6]})
-                .order(ByteOrder.LITTLE_ENDIAN).getShort();
+        if ((byte) packet[1] != (byte) packet.length - lengthSizeByte) {
+            throw new IlligalCardDataException("Can not load packet, because packet length illigal.");
+        }
         ByteBuffer bb = ByteBuffer.wrap(packet);
-        //9 is header length , and 10 is footer length
-        byte[] result = new byte[length];//NegativeArraySizeException
-        bb.get(result, 9, length - 10);//IndexOutOfBoundsException
+        //2 is header length
+        byte[] result = new byte[packet.length - lengthSizeByte - 1];//NegativeArraySizeException
+        //bb.get(result, 2, packet.length-lengthSizeByte-1);//IndexOutOfBoundsException
+        bb.position(2);
+        bb.get(result, 0, packet.length - 2);//IndexOutOfBoundsException
+        //offset はバッファへの挿入位置のオフセットのこと。GETする側の読み出しオフセットではない。
         return result;
     }
 
