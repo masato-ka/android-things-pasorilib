@@ -7,6 +7,7 @@ import ka.masato.library.device.pasori.exception.PasoriNotInitializedException;
 import ka.masato.library.device.pasori.service.CardDataDecoder;
 
 import java.nio.ByteBuffer;
+import java.util.Arrays;
 
 public class PasoriDriverTypeF extends AbstractPasoriDriver {
 
@@ -49,16 +50,14 @@ public class PasoriDriverTypeF extends AbstractPasoriDriver {
             public void run() {
                 if (!isStartRead) return;
                 byte[] result = pollingNFC(110);
-
                 if (result.length <= 0) {
-                    //No IC card.
-                    //41,5,-128,0,0
                 } else {
                     //Get result.
                     cardDataDecoder.loadPacket(result).decodeIDm().decodePMm();
                     mCallback.pollingRecieve(cardDataDecoder.getIDm(), cardDataDecoder.getPMm());
-                    pasoriHandler.postDelayed(this, periodicalMiliTime);
                 }
+                pasoriHandler.postDelayed(this, periodicalMiliTime);
+
             }
 
         };
@@ -81,15 +80,39 @@ public class PasoriDriverTypeF extends AbstractPasoriDriver {
             throw new IlligalParameterTypeException("Card type accept A or B, F");
         }
         byte[] getPayload = this.usbPasoriDriver.transferCommand(cmd.array(), cmd.array().length);
-        byte[] result = new byte[getPayload.length - 6];//6 is header of PasoriDeviceMessage.
-        if (getPayload[0] == (byte) 0xD7 && getPayload[1] == (byte) 0x04 + 1) {
-            if (getPayload[2] == (byte) 0x00 &&
-                    getPayload[3] == (byte) 0x00 &&
-                    getPayload[4] == (byte) 0x00 &&
-                    getPayload[5] == (byte) 0x00) {
-                ByteBuffer.wrap(getPayload, 6, getPayload.length - 6).get(result);
-            }
+        byte[] result = extractRfCommand(getPayload);
+        return result;
+    }
+
+    public byte[] requestService(byte[] idm, int nodeNum, byte[] nodeNode) {
+        //TODO implements.
+        return new byte[0];
+    }
+
+    public byte[] requestResponse(byte[] idm, int timeout) {
+        ByteBuffer rfcmd = ByteBuffer.allocate(9);
+        rfcmd.put((byte) 0x04);
+        rfcmd.put(idm);
+        ByteBuffer cmd = buildRfCommand(rfcmd.array(), timeout);
+        if (cmd == null) {
+            throw new IlligalParameterTypeException("Failed create cmd payload on send RequestService.");
         }
+        byte[] resultPayload = this.usbPasoriDriver.transferCommand(cmd.array(), cmd.array().length);
+        byte[] result = extractRfCommand(resultPayload);
+        return result;
+    }
+
+    public byte[] readWithoutEncription(byte idm, int serviceNum, int timeout) {
+        //TODO implements.
+        return new byte[0];
+    }
+
+    private byte[] extractRfCommand(byte[] resultPayload) {
+        byte[] expect = {(byte) 0xD7, (byte) 0x04 + 1, 0x00, 0x00, 0x00};
+        if (!Arrays.equals(resultPayload, expect)) {
+            throw new FailedRfCommunication("RF command Response header is illigal :" + resultPayload.toString());
+        }
+        byte[] result = ByteBuffer.wrap(resultPayload, 6, resultPayload.length - 6).array();
         return result;
     }
 

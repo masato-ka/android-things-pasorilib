@@ -58,11 +58,11 @@ public class ExampleInstrumentedTest {
         pasoriDriverTypeF.startPolling(handler, pasoriReadCallback);
         while (true) {
             try {
+                Log.i("InstrumentedTest", "Loop");
                 Thread.sleep(1000L);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
-        //assertEquals("ka.masato.library.device.pasori", appContext.getPackageName());
     }
 }

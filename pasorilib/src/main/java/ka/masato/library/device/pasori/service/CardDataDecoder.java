@@ -45,7 +45,7 @@ public class CardDataDecoder {
     public CardDataDecoder decodePMm() {
 
         if (cmdPayload == null) {
-            throw new CardDataDecodeErrorException("Should not decode before load packet function.");
+            throw new CardDataDecodeErrorException("Should not decode bef˚ore load packet function.");
         }
         if (cmdPayload[0] != (byte) 0x01) {
             //TODO Runtime exception is better.
