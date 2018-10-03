@@ -45,7 +45,7 @@ public class CardDataDecoder {
     public CardDataDecoder decodePMm() {
 
         if (cmdPayload == null) {
-            throw new CardDataDecodeErrorException("Should not decode bef˚ore load packet function.");
+            throw new CardDataDecodeErrorException("Should not decode before load packet function.");
         }
         if (cmdPayload[0] != (byte) 0x01) {
             //TODO Runtime exception is better.
@@ -56,9 +56,8 @@ public class CardDataDecoder {
             throw new CardDataDecodeErrorException("Can not decode PMm because data length is too short.");
         }
 
-        ByteBuffer bb = ByteBuffer.wrap(cmdPayload);
+        ByteBuffer bb = ByteBuffer.wrap(cmdPayload, 9, 8);
         byte[] ppm = new byte[8];
-        bb.position(9);
         bb.get(ppm, 0, 8);
         PMmString = convertBytes2String(ppm);
         return this;
@@ -85,20 +84,17 @@ public class CardDataDecoder {
     }
 
     private byte[] extractCmdPayload(byte[] packet) {
-        int lengthSizeByte = 1;
+        int lengthByteSize = 1;
+        int headerByteSize = 1;
         if (packet.length <= 2) {// TODO please change check logic.
             throw new IlligalCardDataException("Can not load packet, because packet length illigal.");
         }
-        if ((byte) packet[1] != (byte) packet.length - lengthSizeByte) {
+        if ((byte) packet[1] != (byte) packet.length - lengthByteSize) {
             throw new IlligalCardDataException("Can not load packet, because packet length illigal.");
         }
-        ByteBuffer bb = ByteBuffer.wrap(packet);
-        //2 is header length
-        byte[] result = new byte[packet.length - lengthSizeByte - 1];//NegativeArraySizeException
-        //bb.get(result, 2, packet.length-lengthSizeByte-1);//IndexOutOfBoundsException
-        bb.position(2);
-        bb.get(result, 0, packet.length - 2);//IndexOutOfBoundsException
-        //offset はバッファへの挿入位置のオフセットのこと。GETする側の読み出しオフセットではない。
+        ByteBuffer bb = ByteBuffer.wrap(packet, 2, packet.length - 2);
+        byte[] result = new byte[packet.length - lengthByteSize - headerByteSize];
+        bb.get(result);
         return result;
     }
 
