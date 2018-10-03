@@ -8,6 +8,8 @@ import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 import android.util.Log;
 import ka.masato.library.device.pasori.callback.PasoriReadCallback;
+import ka.masato.library.device.pasori.driver.PasoriDriverTypeF;
+import ka.masato.library.device.pasori.driver.UsbPasoriDriver;
 import ka.masato.library.device.pasori.exception.PasoriDeviceNotFoundException;
 import ka.masato.library.device.pasori.service.CardDataDecoder;
 import org.junit.Test;

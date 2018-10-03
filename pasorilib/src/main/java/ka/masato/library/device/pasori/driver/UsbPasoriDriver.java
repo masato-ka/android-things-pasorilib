@@ -1,4 +1,4 @@
-package ka.masato.library.device.pasori;
+package ka.masato.library.device.pasori.driver;
 
 import android.hardware.usb.*;
 import ka.masato.library.device.pasori.exception.FailedTransferCommandException;

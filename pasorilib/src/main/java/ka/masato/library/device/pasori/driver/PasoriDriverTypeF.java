@@ -1,4 +1,4 @@
-package ka.masato.library.device.pasori;
+package ka.masato.library.device.pasori.driver;
 
 import android.os.Handler;
 import ka.masato.library.device.pasori.callback.PasoriReadCallback;
@@ -73,7 +73,6 @@ public class PasoriDriverTypeF extends AbstractPasoriDriver {
 
     public byte[] pollingNFC(int timeout) {
 
-        //TODO 戻り値チェックすること。
         ByteBuffer cmd = null;
         cmd = buildRfCommand(new byte[]{0x00, (byte) 0xFF, (byte) 0xFF, 0x01, 0x00}, timeout);
         //if (rfType == CardType.B) cmd = buildRfCommand(new byte[]{(byte) 0x00, 0x10}, timeout);
