@@ -30,9 +30,14 @@ public class CardDataDecoder {
             throw new CardDataDecodeErrorException("Illigal cmd payload, can not decode IDm");
         }
 
+        if (cmdPayload.length != 17 && cmdPayload.length != 19) {
+            throw new CardDataDecodeErrorException("Can not decode IDm because data length is too short.");
+        }
+
         ByteBuffer bb = ByteBuffer.wrap(cmdPayload);
         byte[] idm = new byte[8];
-        bb.get(idm, 3, 8);
+        bb.position(1);
+        bb.get(idm, 0, 8);
         IDmString = convertBytes2String(idm);
         return this;
     }
@@ -40,16 +45,21 @@ public class CardDataDecoder {
     public CardDataDecoder decodePMm() {
 
         if (cmdPayload == null) {
-            throw new CardDataDecodeErrorException("Shoud not decode begore load packet function.");
+            throw new CardDataDecodeErrorException("Should not decode before load packet function.");
         }
         if (cmdPayload[0] != (byte) 0x01) {
             //TODO Runtime exception is better.
             throw new CardDataDecodeErrorException("Illigal cmd payload, can not decode PMm");
         }
 
+        if (cmdPayload.length != 17 && cmdPayload.length != 19) {
+            throw new CardDataDecodeErrorException("Can not decode PMm because data length is too short.");
+        }
+
         ByteBuffer bb = ByteBuffer.wrap(cmdPayload);
         byte[] ppm = new byte[8];
-        bb.get(ppm, 12, 8);
+        bb.position(9);
+        bb.get(ppm, 0, 8);
         PMmString = convertBytes2String(ppm);
         return this;
     }
