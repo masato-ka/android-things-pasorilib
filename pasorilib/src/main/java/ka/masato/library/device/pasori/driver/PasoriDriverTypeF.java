@@ -112,7 +112,9 @@ public class PasoriDriverTypeF extends AbstractPasoriDriver {
         if (!Arrays.equals(resultPayload, expect)) {
             throw new FailedRfCommunication("RF command Response header is illigal :" + resultPayload.toString());
         }
-        byte[] result = ByteBuffer.wrap(resultPayload, 6, resultPayload.length - 6).array();
+        byte[] result = new byte[resultPayload.length - 6];
+        ByteBuffer.wrap(resultPayload, 6, resultPayload.length - 6).get(result);
+
         return result;
     }
 
