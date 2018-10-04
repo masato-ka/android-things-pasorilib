@@ -76,6 +76,7 @@ public class CardDataDecoder {
     }
 
     private String convertBytes2String(byte[] bytes) {
+        //TODO please use data type converter.
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < bytes.length; i++) {
             sb.append(String.format("%02X", bytes[i]));

@@ -119,8 +119,10 @@ public class UsbPasoriDriver {
         byte[] resultPayload = null;
         if (temp[0] == (byte) 0x00 && temp[1] == (byte) 0x00 && temp[2] == (byte) 0xFF) {
             if (temp[3] == (byte) 0xff && temp[4] == (byte) 0xff) {
+
                 byte[] rawLength = {temp[5], temp[6]};
                 int length = (int) ByteBuffer.wrap(rawLength).order(ByteOrder.LITTLE_ENDIAN).getShort();
+
                 resultPayload = new byte[length];
                 for (int i = 0; i < length; i++) {
                     resultPayload[i] = temp[8 + i];
