@@ -307,9 +307,105 @@ public class PasoriDriverTypeFTest {
         }
     }
 
+    //TODO please test emulate when No card.
+
+
+    /**
+     * Normal
+     */
     @Test
-    public void request() {
+    public void requestResponse01() {
+        byte[] testIDm = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+
+        byte[] mockExpectValue = {0x04, 0x6E, 0x00, 0x0A,// header
+                0x04,// command
+                0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};//IDM
+        byte[] mockReturn = {(byte) 0xD7, (byte) 0x04 + 1, 0x00, 0x00, 0x00,//header
+                0x05,
+                0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,//IDM
+                0x00}; //Mode.
+
+        when(usbPasoriDriver.transferCommand(mockExpectValue, mockExpectValue.length))
+                .thenReturn(mockReturn);
+
+        byte[] expect = {0x05,
+                0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,//IDM
+                0x00};
+        byte[] result = target.requestResponse(testIDm, 110);
+        assertTrue(Arrays.equals(result, expect));
     }
+
+    /**
+     * Over max size of timeout
+     */
+    @Test
+    public void requestResponse02() {
+        byte[] testIDm = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+
+        byte[] mockExpectValue = {0x04, (byte) 0xFF, (byte) 0xFF, 0x0A,// header
+                0x04,// command
+                0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};//IDM
+        byte[] mockReturn = {(byte) 0xD7, (byte) 0x04 + 1, 0x00, 0x00, 0x00,//header
+                0x05,
+                0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,//IDM
+                0x00}; //Mode.
+
+        when(usbPasoriDriver.transferCommand(mockExpectValue, mockExpectValue.length))
+                .thenReturn(mockReturn);
+
+        byte[] expect = {0x05,
+                0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,//IDM
+                0x00};
+        byte[] result = target.requestResponse(testIDm, 1100000000);
+        assertTrue(Arrays.equals(result, expect));
+    }
+
+    /**
+     * IDm length size is short
+     */
+    @Test
+    public void AbnormalrequestResponse01() {
+        byte[] testIDm = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+        String expect = "Must be idm length is just 8 byte but idm length is 7";
+        try {
+            byte[] result = target.requestResponse(testIDm, 110);
+            fail();
+        } catch (IlligalParameterTypeException e) {
+            assertThat(e.getMessage(), is(expect));
+        }
+    }
+
+    /**
+     * IDm length size is long
+     */
+    @Test
+    public void AbnormalrequestResponse02() {
+        byte[] testIDm = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+        String expect = "Must be idm length is just 8 byte but idm length is 9";
+        try {
+            byte[] result = target.requestResponse(testIDm, 110);
+            fail();
+        } catch (IlligalParameterTypeException e) {
+            assertThat(e.getMessage(), is(expect));
+        }
+    }
+
+    /**
+     * IDm length size is blank
+     */
+    @Test
+    public void AbnormalrequestResponse03() {
+        byte[] testIDm = {};
+        String expect = "Must be idm length is just 8 byte but idm length is 0";
+        try {
+            byte[] result = target.requestResponse(testIDm, 110);
+            fail();
+        } catch (IlligalParameterTypeException e) {
+            assertThat(e.getMessage(), is(expect));
+        }
+    }
+
+
 
     @Test
     public void readWithoutEncription() {

@@ -112,14 +112,56 @@ public class PasoriDriverTypeF extends AbstractPasoriDriver {
     }
 
     public byte[] requestResponse(byte[] idm, int timeout) {
-        //TODO implements.
-        return new byte[0];
+
+        if (idm.length != 8) {
+            throw new IlligalParameterTypeException("Must be idm length is just 8 byte but idm length is " + idm.length);
+        }
+
+        ByteBuffer rfcmd = ByteBuffer.allocate(1 + 8);
+        rfcmd.put((byte) 0x04);
+        rfcmd.put(idm);
+        ByteBuffer cmd = buildRfCommand(rfcmd.array(), timeout);
+        if (cmd == null) {
+            throw new IlligalParameterTypeException("Failed create cmd payload on send RequestResponse.");
+        }
+
+        byte[] resultPayload = this.usbPasoriDriver.transferCommand(cmd.array(), cmd.array().length);
+        byte[] result = extractRfCommand(resultPayload);
+        return result;
     }
 
+    public byte[] readWithoutEncription(byte[] idm, byte[] serviceCodeList, byte[] blockList, int blockNumber, int timeout) {
 
-    public byte[] readWithoutEncription(byte idm, int serviceNum, int timeout) {
-        //TODO implements.
-        return new byte[0];
+        if (1 > serviceCodeList.length && serviceCodeList.length > 16) {
+            throw new IlligalParameterTypeException("Must be service code list length is 1 to 16 but length is "
+                    + serviceCodeList.length);
+        }
+
+        if ((2 * blockNumber) > blockList.length && blockList.length < (3 * blockNumber)) {
+            throw new IlligalParameterTypeException(" Illigal block list length. check block number or block list. ");
+        }
+
+        if (idm.length != 8) {
+            throw new IlligalParameterTypeException("Must be idm Length is just 8 byte but idm length is " + idm.length);
+        }
+
+        ByteBuffer rfcmd = ByteBuffer.allocate(1 + 8 + 1 + (2 * serviceCodeList.length) + 1 + blockList.length);
+        rfcmd.put((byte) 0x06);
+        rfcmd.put(idm);
+        rfcmd.put((byte) serviceCodeList.length);
+        rfcmd.put(serviceCodeList);
+        rfcmd.put((byte) blockNumber);
+        rfcmd.put(blockList);
+        ByteBuffer cmd = buildRfCommand(rfcmd.array(), timeout);
+
+        if (cmd == null) {
+            throw new IlligalParameterTypeException("Failed create cmd payload on send readWithoutEncription.");
+        }
+
+        byte[] resultPayload = this.usbPasoriDriver.transferCommand(cmd.array(), cmd.array().length);
+        byte[] result = extractRfCommand(resultPayload);
+        return result;
+
     }
 
     private byte[] extractRfCommand(byte[] resultPayload) {
@@ -134,7 +176,6 @@ public class PasoriDriverTypeF extends AbstractPasoriDriver {
         byteBuffer.position(5);
         byte[] result = new byte[resultPayload.length - 5];
         byteBuffer.get(result, 0, resultPayload.length - 5);
-//        ByteBuffer.wrap(resultPayload, 5, resultPayload.length - 5).get(result);
 
         return result;
     }
