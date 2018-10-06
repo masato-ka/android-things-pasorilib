@@ -71,7 +71,6 @@ public class PasoriDriverTypeF extends AbstractPasoriDriver {
 
 
     public byte[] pollingNFC(int timeout) {
-
         ByteBuffer cmd = null;
         cmd = buildRfCommand(new byte[]{0x00, (byte) 0xFF, (byte) 0xFF, 0x01, 0x00}, timeout);
         //if (rfType == CardType.B) cmd = buildRfCommand(new byte[]{(byte) 0x00, 0x10}, timeout);
@@ -109,11 +108,17 @@ public class PasoriDriverTypeF extends AbstractPasoriDriver {
 
     private byte[] extractRfCommand(byte[] resultPayload) {
         byte[] expect = {(byte) 0xD7, (byte) 0x04 + 1, 0x00, 0x00, 0x00};
-        if (!Arrays.equals(resultPayload, expect)) {
+        ByteBuffer byteBuffer = ByteBuffer.wrap(resultPayload, 0, 5);
+        byte[] header = new byte[5];
+        byteBuffer.get(header);
+        if (!Arrays.equals(header, expect)) {
             throw new FailedRfCommunication("RF command Response header is illigal :" + resultPayload.toString());
         }
-        byte[] result = new byte[resultPayload.length - 6];
-        ByteBuffer.wrap(resultPayload, 6, resultPayload.length - 6).get(result);
+        byteBuffer.clear();
+        byteBuffer.position(5);
+        byte[] result = new byte[resultPayload.length - 5];
+        byteBuffer.get(result, 0, resultPayload.length - 5);
+//        ByteBuffer.wrap(resultPayload, 5, resultPayload.length - 5).get(result);
 
         return result;
     }
