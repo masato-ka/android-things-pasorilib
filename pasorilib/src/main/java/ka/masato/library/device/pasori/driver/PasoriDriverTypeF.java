@@ -83,23 +83,39 @@ public class PasoriDriverTypeF extends AbstractPasoriDriver {
         return result;
     }
 
-    public byte[] requestService(byte[] idm, int nodeNum, byte[] nodeNode) {
-        //TODO implements.
-        return new byte[0];
-    }
+    public byte[] requestService(byte[] idm, byte[] nodeList, int timeout) {
+        //TODO nodeList and result nodeKeyList should be match order.
+        if ((nodeList.length % 2) != 0) {
+            throw new IlligalParameterTypeException("Must be node code list length is even number.");
+        }
+        if (2 > nodeList.length || nodeList.length > 64) {
+            throw new IlligalParameterTypeException("Must be node code list length is 2 to 64 and even number.");
+        }
+        if (idm.length != 8) {
+            throw new IlligalParameterTypeException("Must be idm length is just 8 byte but idm length is " + idm.length);
+        }
 
-    public byte[] requestResponse(byte[] idm, int timeout) {
-        ByteBuffer rfcmd = ByteBuffer.allocate(9);
-        rfcmd.put((byte) 0x04);
+        ByteBuffer rfcmd = ByteBuffer.allocate(1 + 8 + 1 + nodeList.length);
+        rfcmd.put((byte) 0x02);
         rfcmd.put(idm);
+        rfcmd.put((byte) ((byte) nodeList.length / 2));
+        rfcmd.put(nodeList);
         ByteBuffer cmd = buildRfCommand(rfcmd.array(), timeout);
+
         if (cmd == null) {
             throw new IlligalParameterTypeException("Failed create cmd payload on send RequestService.");
         }
+
         byte[] resultPayload = this.usbPasoriDriver.transferCommand(cmd.array(), cmd.array().length);
         byte[] result = extractRfCommand(resultPayload);
         return result;
     }
+
+    public byte[] requestResponse(byte[] idm, int timeout) {
+        //TODO implements.
+        return new byte[0];
+    }
+
 
     public byte[] readWithoutEncription(byte idm, int serviceNum, int timeout) {
         //TODO implements.
@@ -112,7 +128,7 @@ public class PasoriDriverTypeF extends AbstractPasoriDriver {
         byte[] header = new byte[5];
         byteBuffer.get(header);
         if (!Arrays.equals(header, expect)) {
-            throw new FailedRfCommunication("RF command Response header is illigal :" + resultPayload.toString());
+            throw new FailedRfCommunication("RF command Response header is illigal.");
         }
         byteBuffer.clear();
         byteBuffer.position(5);
