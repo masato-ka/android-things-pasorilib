@@ -12,8 +12,8 @@ archivesBaseName = 'pasorilib'
 version "${versionMajor}.${versionMinor}.${versionPatch}"
 
 def libraryId = 'pasorilib'
-def siteUrl = 'https://github.com/masato-ka/object-deteciton-sample'
-def githubUrl = 'https://github.com/masato-ka/object-deteciton-sample'
+def siteUrl = 'https://github.com/masato-ka/android-thongs-pasorilib'
+def githubUrl = 'https://github.com/masato-ka/android-thongs-pasorilib'
 
 
 android {
