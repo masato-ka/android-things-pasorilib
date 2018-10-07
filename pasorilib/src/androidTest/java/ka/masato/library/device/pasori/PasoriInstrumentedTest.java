@@ -73,20 +73,56 @@ public class PasoriInstrumentedTest {
         Handler handler = new Handler(handlerThread.getLooper());
         Log.i("InstrumentedTest", "Please touch your IC card on Pasori.");
         pasoriDriverTypeF.startPolling(handler, pasoriReadCallback);
-        while (status) {
-            try {
-                Log.i("InstrumentedTest", "Loop");
-                Thread.sleep(1000L);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
+        waitingPollingResult();
         pasoriDriverTypeF.stopPolling();
     }
 
     @Test
     public void RequestResponseTest() {
-        PasoriReadCallback pasoriReadCallback = new PasoriReadCallback() {
+        PasoriReadCallback pasoriReadCallback = getPasoriReadCallback();
+
+        HandlerThread handlerThread = new HandlerThread("polling");
+        handlerThread.start();
+        Handler handler = new Handler(handlerThread.getLooper());
+        Log.i("InstrumentedTest", "Please touch your IC card on Pasori.");
+        pasoriDriverTypeF.startPolling(handler, pasoriReadCallback);
+        waitingPollingResult();
+        pasoriDriverTypeF.stopPolling();
+        byte[] idm = hex2bin(stringIdm);
+        byte[] result = pasoriDriverTypeF.requestResponse(idm, 110);
+
+        Log.i("InstrumentedTest", "Result:" + result.length);
+
+    }
+
+    @Test
+    public void ReadWithoutEncriptionTest() {
+        PasoriReadCallback pasoriReadCallback = getPasoriReadCallback();
+
+        HandlerThread handlerThread = new HandlerThread("polling");
+        handlerThread.start();
+        Handler handler = new Handler(handlerThread.getLooper());
+        Log.i("InstrumentedTest", "Please touch your IC card on Pasori.");
+
+        pasoriDriverTypeF.startPolling(handler, pasoriReadCallback);
+
+        waitingPollingResult();
+
+        pasoriDriverTypeF.stopPolling();
+
+        byte[] idm = hex2bin(stringIdm);
+        byte[] serviceCodeList = {0x0F, 0x09}; //bigendian?
+        byte[] blockList = {(byte) 0x80, (byte) 0x00}; //read block 0 (latest record of suica)
+        int numberOfBlock = 1;
+        //Read info that is suica ic card latest recoard.
+        byte[] result = pasoriDriverTypeF.readWithoutEncryption(idm, serviceCodeList, blockList, numberOfBlock, 110);
+        // If you decode suica reacoard please see in http://raspberry.mcoapps.com/archives/128.
+        Log.i("InstrumentedTest", "Result:" + convertBytes2String(result));
+
+    }
+
+    private PasoriReadCallback getPasoriReadCallback() {
+        return new PasoriReadCallback() {
             @Override
             public void pollingRecieve(String idmString, String pmmString) {
                 Log.i("InstrumentedTest", "IDM: " + idmString + " PMm: " + pmmString);
@@ -94,12 +130,10 @@ public class PasoriInstrumentedTest {
                 status = false;
             }
         };
+    }
 
-        HandlerThread handlerThread = new HandlerThread("polling");
-        handlerThread.start();
-        Handler handler = new Handler(handlerThread.getLooper());
-        Log.i("InstrumentedTest", "Please touch your IC card on Pasori.");
-        pasoriDriverTypeF.startPolling(handler, pasoriReadCallback);
+
+    private void waitingPollingResult() {
         while (status) {
             try {
                 Log.i("InstrumentedTest", "Loop");
@@ -108,15 +142,8 @@ public class PasoriInstrumentedTest {
                 e.printStackTrace();
             }
         }
-        pasoriDriverTypeF.stopPolling();
-        byte[] idm = hex2bin(stringIdm);
-        byte[] result = pasoriDriverTypeF.requestResponse(idm, 110);
-
-
-        Log.i("InstrumentedTest", "Result:" + result.length);
-
-
     }
+
 
     private byte[] hex2bin(String hex) {
         byte[] bytes = new byte[hex.length() / 2];
@@ -124,5 +151,14 @@ public class PasoriInstrumentedTest {
             bytes[index] = (byte) Integer.parseInt(hex.substring(index * 2, (index + 1) * 2), 16);
         }
         return bytes;
+    }
+
+    private String convertBytes2String(byte[] bytes) {
+        //TODO please use data type converter.
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < bytes.length; i++) {
+            sb.append(String.format("%02X", bytes[i]));
+        }
+        return sb.toString();
     }
 }
