@@ -1,4 +1,20 @@
 apply plugin: 'com.android.library'
+apply plugin: 'maven'
+apply plugin: 'com.jfrog.bintray'
+apply plugin: 'com.github.dcendents.android-maven'
+
+def versionMajor = 1
+def versionMinor = 0
+def versionPatch = 0
+
+group 'ka.masato.library.device'
+archivesBaseName = 'pasorilib'
+version "${versionMajor}.${versionMinor}.${versionPatch}"
+
+def libraryId = 'pasorilib'
+def siteUrl = 'https://github.com/masato-ka/object-deteciton-sample'
+def githubUrl = 'https://github.com/masato-ka/object-deteciton-sample'
+
 
 android {
     compileSdkVersion 28
@@ -22,6 +38,8 @@ android {
     }
 }
 
+
+
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'com.android.support.constraint:constraint-layout:1.1.2'
@@ -30,4 +48,51 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     compileOnly 'com.google.android.things:androidthings:+'
+}
+
+
+bintray {
+    user = project.hasProperty('bintray_user') ? bintray_user : ''
+    key = project.hasProperty('bintray_key') ? bintray_key : ''
+    configurations = ['archives']
+
+    pkg {
+        repo = 'android-things-support'
+        name = project.group + '.' + libraryId
+        licenses = ['MIT']
+        websiteUrl = siteUrl
+        issueTrackerUrl = githubUrl + '/blob/master/LICENSE'
+        vcsUrl = githubUrl + '.git'
+        issueTrackerUrl = githubUrl + '/issues'
+        publicDownloadNumbers = true
+        version {
+            name = project.version
+        }
+    }
+}
+
+install {
+    repositories.mavenInstaller {
+        pom.project {
+            name libraryId
+            url siteUrl
+
+            packaging 'aar'
+            groupId project.group
+            artifactId libraryId
+            version project.version
+
+            licenses {
+                license {
+                    name 'The MIT License'
+                    url 'https://opensource.org/licenses/MIT'
+                    distribution 'repo'
+                }
+            }
+            scm {
+                connection githubUrl + '.git'
+                url githubUrl
+            }
+        }
+    }
 }
