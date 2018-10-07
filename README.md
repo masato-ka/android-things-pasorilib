@@ -12,9 +12,12 @@ I checked this software with only RC-S380/S. But, I believe the adapt to RC-S380
 
 ## install
 
+Add repository your build system configuration.
+```
+https://dl.bintray.com/masato-ka/android-things-support/
+```
+
 Please write to your project pom file.
-
-
 ```gradle
 <dependency>
   <groupId>ka.masato.library.device</groupId>
