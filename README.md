@@ -14,13 +14,20 @@ I checked this software with only RC-S380/S. But, I believe the adapt to RC-S380
 
 Please write to your project pom file.
 
+
+```gradle
+<dependency>
+  <groupId>ka.masato.library.device</groupId>
+  <artifactId>pasorilib</artifactId>
+  <version>1.0.0</version>
+  <type>pom</type>
+</dependency>
 ```
 
-```
-
-If you use gradle
+If you use gradle.
 
 ```
+implementation compile 'ka.masato.library.device:pasorilib:1.0.0'
 
 
 ```
@@ -28,38 +35,56 @@ If you use gradle
 
 ## Usage
 
+The sample of read IDm of Felica. You can watch other sample at the ```PasoriInstrumentedTest.java```
+
 ```java
 
-mUsbManager = (UsbManager) getSystemService(Context.USB_SERVICE);
-HandlerThread mThread = new HandlerThread("pasoriThread");
-mThread.start();
-Handler pasoriHandler = new Handler(mThread.getLooper());
-PasoriReader mPasoriReader =  PasoriReader.getInstance();
-mPasoriReader.initializeDevice(mUsbManager, CardType.F);
-PasoriReadCallback mCallback = new PasoriReadCallback() {
+PasoriReadCallback pasoriReadCallback = new PasoriReadCallback() {
     @Override
-    public void getResult(CardRecord card) {
-        Log.d(LOG_TAG, "Get card info");
+    public void pollingRecieve(String idmString, String pmmString) {
+        Log.i("InstrumentedTest", "IDM: " + idmString + " PMm: " + pmmString);
+        status = false;
     }
 };
-mPasoriReader.startRead(pasoriHandler, mCallback);
 
-// some doing or other funciton...
+HandlerThread handlerThread = new HandlerThread("polling");
+handlerThread.start();
+Handler handler = new Handler(handlerThread.getLooper());
+Log.i("InstrumentedTest", "Please touch your IC card on Pasori.");
+pasoriDriverTypeF.startPolling(handler, pasoriReadCallback);
 
-mPasoriReader.stop();
+while (status) {
+    try {
+        Log.i("InstrumentedTest", "Loop");
+        Thread.sleep(1000L);
+    } catch (InterruptedException e) {
+       e.printStackTrace();
+    }
+}
+
+
+pasoriDriverTypeF.stopPolling();
 
 ```
 
 ## Version
 
+* 2018/10/07 Version 1.0.0
+    * Support without encryption function on Felica(NFC-TypeF)
+      * polling
+      * RequestService
+      * RequestResponse
+      * readWithoutEncryption
+      * writeWithoutEncryption
+      
 * 2018/9/10  Version 0.5.0
     * first release version. 
 
 ## Author
 
-* masato-ka
-* jp6uzv@gmail.com
-* Twitter @masato_ka
+Name : masato-ka
+E-mai: jp6uzv at gmail.com
+Twitter: @masato_ka
 
 ## LICENCE
 
@@ -67,6 +92,3 @@ MIT
 
 
 &copy; 2018 masato-ka All Rights Reserved.
-
-
-
