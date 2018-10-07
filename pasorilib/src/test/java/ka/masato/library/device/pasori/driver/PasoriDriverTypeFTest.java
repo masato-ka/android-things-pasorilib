@@ -410,7 +410,7 @@ public class PasoriDriverTypeFTest {
      * Normal
      */
     @Test
-    public void readWithoutEncription01() {
+    public void readWithoutEncryption01() {
         byte[] testIdm = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
         byte[] testServiceCodeList = {0x00, 0x00, 0x00, 0x00};
         byte[] testBlockList = {(byte) 0x80, 0x00, 0x01, 0x01, 0x01};//A block is 2byte or 3byte
@@ -443,7 +443,7 @@ public class PasoriDriverTypeFTest {
                 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,// block data
                 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};// block data
 
-        byte[] result = target.readWithoutEncription(testIdm,
+        byte[] result = target.readWithoutEncryption(testIdm,
                 testServiceCodeList, testBlockList, testBlockSize, 110);
 
         assertTrue(Arrays.equals(result, expect));
@@ -454,7 +454,7 @@ public class PasoriDriverTypeFTest {
      * Over timeout value.
      */
     @Test
-    public void readWithoutEncription02() {
+    public void readWithoutEncryption02() {
         byte[] testIdm = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
         byte[] testServiceCodeList = {0x00, 0x00, 0x00, 0x00};
         byte[] testBlockList = {(byte) 0x80, 0x00, 0x01, 0x01, 0x01};//A block is 2byte or 3byte
@@ -487,7 +487,7 @@ public class PasoriDriverTypeFTest {
                 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,// block data
                 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};// block data
 
-        byte[] result = target.readWithoutEncription(testIdm,
+        byte[] result = target.readWithoutEncryption(testIdm,
                 testServiceCodeList, testBlockList, testBlockSize, 11000000);
 
         assertTrue(Arrays.equals(result, expect));
@@ -498,7 +498,7 @@ public class PasoriDriverTypeFTest {
      * Max service code list
      */
     @Test
-    public void readWithoutEncription03() {
+    public void readWithoutEncryption03() {
         byte[] testIdm = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
         byte[] testServiceCodeList = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
         byte[] testBlockList = {(byte) 0x80, 0x00, 0x01, 0x01, 0x01};//A block is 2byte or 3byte
@@ -531,7 +531,7 @@ public class PasoriDriverTypeFTest {
                 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,// block data
                 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};// block data
 
-        byte[] result = target.readWithoutEncription(testIdm,
+        byte[] result = target.readWithoutEncryption(testIdm,
                 testServiceCodeList, testBlockList, testBlockSize, 11000000);
 
         assertTrue(Arrays.equals(result, expect));
@@ -542,7 +542,7 @@ public class PasoriDriverTypeFTest {
      * min service code list
      */
     @Test
-    public void readWithoutEncription04() {
+    public void readWithoutEncryption04() {
         byte[] testIdm = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
         byte[] testServiceCodeList = {0x00, 0x00};
         byte[] testBlockList = {(byte) 0x80, 0x00, 0x01, 0x01, 0x01};//A block is 2byte or 3byte
@@ -575,7 +575,7 @@ public class PasoriDriverTypeFTest {
                 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,// block data
                 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};// block data
 
-        byte[] result = target.readWithoutEncription(testIdm,
+        byte[] result = target.readWithoutEncryption(testIdm,
                 testServiceCodeList, testBlockList, testBlockSize, 11000000);
 
         assertTrue(Arrays.equals(result, expect));
@@ -586,7 +586,7 @@ public class PasoriDriverTypeFTest {
      * Min testBlockSize (2 byte)
      */
     @Test
-    public void readWithoutEncription05() {
+    public void readWithoutEncryption05() {
         byte[] testIdm = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
         byte[] testServiceCodeList = {0x00, 0x00, 0x00, 0x00};
         byte[] testBlockList = {(byte) 0x80, 0x00};//A block is 2byte or 3byte
@@ -619,7 +619,7 @@ public class PasoriDriverTypeFTest {
                 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,// block data
                 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};// block data
 
-        byte[] result = target.readWithoutEncription(testIdm,
+        byte[] result = target.readWithoutEncryption(testIdm,
                 testServiceCodeList, testBlockList, testBlockSize, 110);
 
         assertTrue(Arrays.equals(result, expect));
@@ -630,7 +630,7 @@ public class PasoriDriverTypeFTest {
      * Min testBlockSize (3 byte)
      */
     @Test
-    public void readWithoutEncription06() {
+    public void readWithoutEncryption06() {
         byte[] testIdm = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
         byte[] testServiceCodeList = {0x00, 0x00, 0x00, 0x00};
         byte[] testBlockList = {0x00, 0x00, 0x00};//A block is 2byte or 3byte
@@ -663,7 +663,7 @@ public class PasoriDriverTypeFTest {
                 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,// block data
                 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};// block data
 
-        byte[] result = target.readWithoutEncription(testIdm,
+        byte[] result = target.readWithoutEncryption(testIdm,
                 testServiceCodeList, testBlockList, testBlockSize, 110);
 
         assertTrue(Arrays.equals(result, expect));
@@ -674,7 +674,7 @@ public class PasoriDriverTypeFTest {
      * Illigal Idm value less than 8.
      */
     @Test
-    public void AbnormalreadWithoutEncription01() {
+    public void AbnormalreadWithoutEncryption01() {
         byte[] testIdm = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
         byte[] testServiceCodeList = {0x00, 0x00, 0x00, 0x00};
         byte[] testBlockList = {(byte) 0x80, 0x00, 0x01, 0x01, 0x01};//A block is 2byte or 3byte
@@ -683,7 +683,7 @@ public class PasoriDriverTypeFTest {
         String expect = "Must be idm Length is just 8 byte but idm length is 7";
 
         try {
-            byte[] result = target.readWithoutEncription(testIdm,
+            byte[] result = target.readWithoutEncryption(testIdm,
                     testServiceCodeList, testBlockList, testBlockSize, 110);
             fail();
         } catch (IlligalParameterTypeException e) {
@@ -696,7 +696,7 @@ public class PasoriDriverTypeFTest {
      * Illigal Idm value more than 8.
      */
     @Test
-    public void AbnormalreadWithoutEncription02() {
+    public void AbnormalreadWithoutEncryption02() {
         byte[] testIdm = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
         byte[] testServiceCodeList = {0x00, 0x00, 0x00, 0x00};
         byte[] testBlockList = {(byte) 0x80, 0x00, 0x01, 0x01, 0x01};//A block is 2byte or 3byte
@@ -705,7 +705,7 @@ public class PasoriDriverTypeFTest {
         String expect = "Must be idm Length is just 8 byte but idm length is 9";
 
         try {
-            byte[] result = target.readWithoutEncription(testIdm,
+            byte[] result = target.readWithoutEncryption(testIdm,
                     testServiceCodeList, testBlockList, testBlockSize, 110);
             fail();
         } catch (IlligalParameterTypeException e) {
@@ -719,7 +719,7 @@ public class PasoriDriverTypeFTest {
      * Illigal testService code empty.
      */
     @Test
-    public void AbnormalreadWithoutEncription03() {
+    public void AbnormalreadWithoutEncryption03() {
         byte[] testIdm = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
         byte[] testServiceCodeList = {};
         byte[] testBlockList = {(byte) 0x80, 0x00, 0x01, 0x01, 0x01};//A block is 2byte or 3byte
@@ -728,7 +728,7 @@ public class PasoriDriverTypeFTest {
         String expect = "Must be service code list length is 2 to 32 but length is 0";
 
         try {
-            byte[] result = target.readWithoutEncription(testIdm,
+            byte[] result = target.readWithoutEncryption(testIdm,
                     testServiceCodeList, testBlockList, testBlockSize, 110);
             fail();
         } catch (IlligalParameterTypeException e) {
@@ -741,7 +741,7 @@ public class PasoriDriverTypeFTest {
      * Illigal testService length is more than 16(actual is over 32).
      */
     @Test
-    public void AbnormalreadWithoutEncription04() {
+    public void AbnormalreadWithoutEncryption04() {
         byte[] testIdm = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
         byte[] testServiceCodeList = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
                 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -753,7 +753,7 @@ public class PasoriDriverTypeFTest {
         String expect = "Must be service code list length is 2 to 32 but length is 33";
 
         try {
-            byte[] result = target.readWithoutEncription(testIdm,
+            byte[] result = target.readWithoutEncryption(testIdm,
                     testServiceCodeList, testBlockList, testBlockSize, 110);
             fail();
         } catch (IlligalParameterTypeException e) {
@@ -766,7 +766,7 @@ public class PasoriDriverTypeFTest {
      * Illigal testService length is less than 2.
      */
     @Test
-    public void AbnormalreadWithoutEncription05() {
+    public void AbnormalreadWithoutEncryption05() {
         byte[] testIdm = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
         byte[] testServiceCodeList = {0x00};
         byte[] testBlockList = {(byte) 0x80, 0x00, 0x01, 0x01, 0x01};//A block is 2byte or 3byte
@@ -775,7 +775,7 @@ public class PasoriDriverTypeFTest {
         String expect = "Must be service code list length is 2 to 32 but length is 1";
 
         try {
-            byte[] result = target.readWithoutEncription(testIdm,
+            byte[] result = target.readWithoutEncryption(testIdm,
                     testServiceCodeList, testBlockList, testBlockSize, 110);
             fail();
         } catch (IlligalParameterTypeException e) {
@@ -788,7 +788,7 @@ public class PasoriDriverTypeFTest {
      * Illigal testService length is odd.
      */
     @Test
-    public void AbnormalreadWithoutEncription06() {
+    public void AbnormalreadWithoutEncryption06() {
         byte[] testIdm = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
         byte[] testServiceCodeList = {0x00, 0x00, 0x00};
         byte[] testBlockList = {(byte) 0x80, 0x00, 0x01, 0x01, 0x01};//A block is 2byte or 3byte
@@ -797,7 +797,7 @@ public class PasoriDriverTypeFTest {
         String expect = "Must be service code list length is Even but length is 3";
 
         try {
-            byte[] result = target.readWithoutEncription(testIdm,
+            byte[] result = target.readWithoutEncryption(testIdm,
                     testServiceCodeList, testBlockList, testBlockSize, 110);
             fail();
         } catch (IlligalParameterTypeException e) {
@@ -810,7 +810,7 @@ public class PasoriDriverTypeFTest {
      * Illigal block list length. block list is 2 block (2 byte and 3 byte) but size is 1
      */
     @Test
-    public void AbnormalreadWithoutEncription07() {
+    public void AbnormalreadWithoutEncryption07() {
         byte[] testIdm = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
         byte[] testServiceCodeList = {0x00, 0x00, 0x00, 0x00};
         byte[] testBlockList = {(byte) 0x80, 0x00, 0x01, 0x01, 0x01};//A block is 2byte or 3byte
@@ -819,7 +819,7 @@ public class PasoriDriverTypeFTest {
         String expect = "Wrong block number. you specific : 1";
 
         try {
-            byte[] result = target.readWithoutEncription(testIdm,
+            byte[] result = target.readWithoutEncryption(testIdm,
                     testServiceCodeList, testBlockList, testBlockSize, 110);
             fail();
         } catch (IlligalParameterTypeException e) {
@@ -832,7 +832,7 @@ public class PasoriDriverTypeFTest {
      * Illigal block list length. block list is 2 block (2 byte and 2 byte) but size is 1
      */
     @Test
-    public void AbnormalreadWithoutEncription08() {
+    public void AbnormalreadWithoutEncryption08() {
         byte[] testIdm = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
         byte[] testServiceCodeList = {0x00, 0x00, 0x00, 0x00};
         byte[] testBlockList = {(byte) 0x80, 0x00, (byte) 0x81, 0x01};//A block is 2byte or 3byte
@@ -841,7 +841,7 @@ public class PasoriDriverTypeFTest {
         String expect = "Wrong block number. you specific : 1";
 
         try {
-            byte[] result = target.readWithoutEncription(testIdm,
+            byte[] result = target.readWithoutEncryption(testIdm,
                     testServiceCodeList, testBlockList, testBlockSize, 110);
             fail();
         } catch (IlligalParameterTypeException e) {
@@ -854,7 +854,7 @@ public class PasoriDriverTypeFTest {
      * Illigal block list length. block list is 3 block (2 byte and 3 byte) but size is 1
      */
     @Test
-    public void AbnormalreadWithoutEncription09() {
+    public void AbnormalreadWithoutEncryption09() {
         byte[] testIdm = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
         byte[] testServiceCodeList = {0x00, 0x00, 0x00, 0x00};
         byte[] testBlockList = {(byte) 0x80, 0x00, 0x01, 0x01, 0x01};//A block is 2byte or 3byte
@@ -863,7 +863,7 @@ public class PasoriDriverTypeFTest {
         String expect = "Wrong block number. you specific : 3";
 
         try {
-            byte[] result = target.readWithoutEncription(testIdm,
+            byte[] result = target.readWithoutEncryption(testIdm,
                     testServiceCodeList, testBlockList, testBlockSize, 110);
             fail();
         } catch (IlligalParameterTypeException e) {
@@ -876,7 +876,7 @@ public class PasoriDriverTypeFTest {
      * Illigal block list length. block list is 3 block (3 byte and 3 byte) but size is 1
      */
     @Test
-    public void AbnormalreadWithoutEncription10() {
+    public void AbnormalreadWithoutEncryption10() {
         byte[] testIdm = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
         byte[] testServiceCodeList = {0x00, 0x00, 0x00, 0x00};
         byte[] testBlockList = {0x00, 0x00, 0x00, 0x01, 0x01, 0x01};//2 block element(3byte )
@@ -885,7 +885,7 @@ public class PasoriDriverTypeFTest {
         String expect = "Wrong block number. you specific : 3";
 
         try {
-            byte[] result = target.readWithoutEncription(testIdm,
+            byte[] result = target.readWithoutEncryption(testIdm,
                     testServiceCodeList, testBlockList, testBlockSize, 110);
             fail();
         } catch (IlligalParameterTypeException e) {
@@ -898,7 +898,7 @@ public class PasoriDriverTypeFTest {
      * Illigal block list length. block list is 3 block (2 byte and 2 byte) but size is 1
      */
     @Test
-    public void AbnormalreadWithoutEncription11() {
+    public void AbnormalreadWithoutEncryption11() {
         byte[] testIdm = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
         byte[] testServiceCodeList = {0x00, 0x00, 0x00, 0x00};
         byte[] testBlockList = {(byte) 0x80, 0x00, (byte) 0x81, 0x01};//A block is 2byte or 3byte
@@ -907,7 +907,7 @@ public class PasoriDriverTypeFTest {
         String expect = "Wrong block number. you specific : 3";
 
         try {
-            byte[] result = target.readWithoutEncription(testIdm,
+            byte[] result = target.readWithoutEncryption(testIdm,
                     testServiceCodeList, testBlockList, testBlockSize, 110);
             fail();
         } catch (IlligalParameterTypeException e) {
@@ -920,7 +920,7 @@ public class PasoriDriverTypeFTest {
      * BlockList length is illigal. too long.
      */
     @Test
-    public void AbnormalreadWithoutEncription12() {
+    public void AbnormalreadWithoutEncryption12() {
         byte[] testIdm = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
         byte[] testServiceCodeList = {0x00, 0x00, 0x00, 0x00};
         byte[] testBlockList = {(byte) 0x80, 0x00, (byte) 0x81, 0x01, 0x02};//A block is 2byte or 3byte
@@ -929,7 +929,7 @@ public class PasoriDriverTypeFTest {
         String expect = "Illigal block list byte length.";
 
         try {
-            byte[] result = target.readWithoutEncription(testIdm,
+            byte[] result = target.readWithoutEncryption(testIdm,
                     testServiceCodeList, testBlockList, testBlockSize, 110);
             fail();
         } catch (IlligalParameterTypeException e) {
@@ -942,7 +942,7 @@ public class PasoriDriverTypeFTest {
      * Illigal block list length. block list is 3 block (2 byte and 2 byte) but size is 1
      */
     @Test
-    public void AbnormalreadWithoutEncription13() {
+    public void AbnormalreadWithoutEncryption13() {
         byte[] testIdm = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
         byte[] testServiceCodeList = {0x00, 0x00, 0x00, 0x00};
         byte[] testBlockList = {(byte) 0x80, 0x00, (byte) 0x81};//A block is 2byte or 3byte
@@ -951,7 +951,7 @@ public class PasoriDriverTypeFTest {
         String expect = "Illigal block list byte length.";
 
         try {
-            byte[] result = target.readWithoutEncription(testIdm,
+            byte[] result = target.readWithoutEncryption(testIdm,
                     testServiceCodeList, testBlockList, testBlockSize, 110);
             fail();
         } catch (IlligalParameterTypeException e) {
@@ -960,5 +960,634 @@ public class PasoriDriverTypeFTest {
 
     }
 
+
+    /**
+     * Normal
+     */
+    @Test
+    public void writeWithoutEncryption01() {
+        byte[] testIdm = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+        byte[] testServiceCodeList = {0x00, 0x00, 0x00, 0x00};
+        byte[] testBlockList = {(byte) 0x80, 0x00, 0x01, 0x01, 0x01};//A block is 2byte or 3byte
+        int testBlockSize = 2;
+        byte[] testBlockData = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+                0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+
+        byte[] mockExpectValue = {0x04, 0x6E, 0x00, 0x35,// header
+                0x08,// command
+                0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,//IDM
+                (byte) ((byte) testServiceCodeList.length / 2),// service code number
+                0x00, 0x00, 0x00, 0x00, // service code list
+                (byte) testBlockSize,
+                (byte) 0x80, 0x00, 0x01, 0x01, 0x01, //BlockList
+                0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,//block data
+                0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+        };
+        byte[] mockReturn = {(byte) 0xD7, (byte) 0x04 + 1, 0x00, 0x00, 0x00,//header
+                0x09,
+                0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,//IDM
+                0x00, 0x00,// status flag 1 and 2
+        };
+
+        when(usbPasoriDriver.transferCommand(mockExpectValue, mockExpectValue.length))
+                .thenReturn(mockReturn);
+
+        byte[] expect = {0x09,
+                0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,//IDM
+                0x00, 0x00};// status flag 1 and 2
+
+        byte[] result = target.writeWithoutEncryption(testIdm,
+                testServiceCodeList, testBlockList, testBlockSize, testBlockData, 110);
+
+        assertTrue(Arrays.equals(result, expect));
+
+    }
+
+    /**
+     * Over timeout value.
+     */
+    @Test
+    public void writeWithoutEncryption02() {
+        byte[] testIdm = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+        byte[] testServiceCodeList = {0x00, 0x00, 0x00, 0x00};
+        byte[] testBlockList = {(byte) 0x80, 0x00, 0x01, 0x01, 0x01};//A block is 2byte or 3byte
+        int testBlockSize = 2;
+        byte[] testBlockData = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+                0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+
+        byte[] mockExpectValue = {0x04, (byte) 0xFF, (byte) 0xFF, 0x35,// header
+                0x08,// command
+                0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,//IDM
+                (byte) ((byte) testServiceCodeList.length / 2),// service code number
+                0x00, 0x00, 0x00, 0x00, // service code list
+                (byte) testBlockSize,
+                (byte) 0x80, 0x00, 0x01, 0x01, 0x01, //BlockList
+                0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,//block data
+                0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+        };
+        byte[] mockReturn = {(byte) 0xD7, (byte) 0x04 + 1, 0x00, 0x00, 0x00,//header
+                0x09,
+                0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,//IDM
+                0x00, 0x00,// status flag 1 and 2
+        };
+
+        when(usbPasoriDriver.transferCommand(mockExpectValue, mockExpectValue.length))
+                .thenReturn(mockReturn);
+
+        byte[] expect = {0x09,
+                0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,//IDM
+                0x00, 0x00};// status flag 1 and 2
+
+        byte[] result = target.writeWithoutEncryption(testIdm,
+                testServiceCodeList, testBlockList, testBlockSize, testBlockData, 110000000);
+
+        assertTrue(Arrays.equals(result, expect));
+
+    }
+
+    /**
+     * Max service code list
+     */
+    @Test
+    public void writeWithoutEncryption03() {
+        byte[] testIdm = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+        byte[] testServiceCodeList = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+        byte[] testBlockList = {(byte) 0x80, 0x00, 0x01, 0x01, 0x01};//A block is 2byte or 3byte
+        int testBlockSize = 2;
+        byte[] testBlockData = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+                0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+
+        byte[] mockExpectValue = {0x04, (byte) 0xFF, (byte) 0xFF, 0x41,// header
+                0x08,// command
+                0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,//IDM
+                (byte) ((byte) testServiceCodeList.length / 2),// service code number
+                0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // service code list
+                (byte) testBlockSize,
+                (byte) 0x80, 0x00, 0x01, 0x01, 0x01,
+                0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,//block data
+                0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+
+        };
+        byte[] mockReturn = {(byte) 0xD7, (byte) 0x04 + 1, 0x00, 0x00, 0x00,//header
+                0x09,
+                0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,//IDM
+                0x00, 0x00,// status flag 1 and 2
+        };
+
+        when(usbPasoriDriver.transferCommand(mockExpectValue, mockExpectValue.length))
+                .thenReturn(mockReturn);
+
+        byte[] expect = {0x09,
+                0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,//IDM
+                0x00, 0x00};// status flag 1 and 2;// block data
+
+        byte[] result = target.writeWithoutEncryption(testIdm,
+                testServiceCodeList, testBlockList, testBlockSize, testBlockData, 11000000);
+
+        assertTrue(Arrays.equals(result, expect));
+
+    }
+
+    /**
+     * min service code list
+     */
+    @Test
+    public void writeWithoutEncryption04() {
+        byte[] testIdm = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+        byte[] testServiceCodeList = {0x00, 0x00};
+        byte[] testBlockList = {(byte) 0x80, 0x00, 0x01, 0x01, 0x01};//A block is 2byte or 3byte
+        int testBlockSize = 2;
+        byte[] testBlockData = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+                0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+
+
+        byte[] mockExpectValue = {0x04, (byte) 0xFF, (byte) 0xFF, 0x33,// header
+                0x08,// command
+                0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,//IDM
+                (byte) ((byte) testServiceCodeList.length / 2),// service code number
+                0x00, 0x00,// service code list
+                (byte) testBlockSize,
+                (byte) 0x80, 0x00, 0x01, 0x01, 0x01,
+                0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,//block data
+                0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+        };
+        byte[] mockReturn = {(byte) 0xD7, (byte) 0x04 + 1, 0x00, 0x00, 0x00,//header
+                0x09,
+                0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,//IDM
+                0x00, 0x00,// status flag 1 and 2
+        };
+
+        when(usbPasoriDriver.transferCommand(mockExpectValue, mockExpectValue.length))
+                .thenReturn(mockReturn);
+
+        byte[] expect = {0x09,
+                0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,//IDM
+                0x00, 0x00,// status flag 1 and 2
+        };
+
+        byte[] result = target.writeWithoutEncryption(testIdm,
+                testServiceCodeList, testBlockList, testBlockSize, testBlockData, 11000000);
+
+        assertTrue(Arrays.equals(result, expect));
+
+    }
+
+    /**
+     * Min testBlockSize (2 byte)
+     */
+    @Test
+    public void writeWithoutEncryption05() {
+        byte[] testIdm = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+        byte[] testServiceCodeList = {0x00, 0x00, 0x00, 0x00};
+        byte[] testBlockList = {(byte) 0x80, 0x00};//A block is 2byte or 3byte
+        int testBlockSize = 1;
+        byte[] testBlockData = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+
+
+        byte[] mockExpectValue = {0x04, 0x6E, 0x00, 0x22,// header
+                0x08,// command
+                0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,//IDM
+                (byte) ((byte) testServiceCodeList.length / 2),// service code number
+                0x00, 0x00, 0x00, 0x00, // service code list
+                (byte) testBlockSize,
+                (byte) 0x80, 0x00,
+                0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00// block data
+        };
+        byte[] mockReturn = {(byte) 0xD7, (byte) 0x04 + 1, 0x00, 0x00, 0x00,//header
+                0x09,
+                0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,//IDM
+                0x00, 0x00// status flag 1 and 2
+        };
+
+        when(usbPasoriDriver.transferCommand(mockExpectValue, mockExpectValue.length))
+                .thenReturn(mockReturn);
+
+        byte[] expect = {0x09,
+                0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,//IDM
+                0x00, 0x00,// status flag 1 and 2
+        };// block data
+
+        byte[] result = target.writeWithoutEncryption(testIdm,
+                testServiceCodeList, testBlockList, testBlockSize, testBlockData, 110);
+
+        assertTrue(Arrays.equals(result, expect));
+
+    }
+
+    /**
+     * Min testBlockSize (3 byte)
+     */
+    @Test
+    public void writeWithoutEncryption06() {
+        byte[] testIdm = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+        byte[] testServiceCodeList = {0x00, 0x00, 0x00, 0x00};
+        byte[] testBlockList = {0x00, 0x00, 0x00};//A block is 2byte or 3byte
+        int testBlockSize = 1;
+        byte[] testBlockData = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+
+        byte[] mockExpectValue = {0x04, 0x6E, 0x00, 0x23,// header
+                0x08,// command
+                0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,//IDM
+                (byte) ((byte) testServiceCodeList.length / 2),// service code number
+                0x00, 0x00, 0x00, 0x00, // service code list
+                (byte) testBlockSize,
+                0x00, 0x00, 0x00,
+                0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00// block Data
+        };
+        byte[] mockReturn = {(byte) 0xD7, (byte) 0x04 + 1, 0x00, 0x00, 0x00,//header
+                0x09,
+                0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,//IDM
+                0x00, 0x00,// status flag 1 and 2
+        };
+
+        when(usbPasoriDriver.transferCommand(mockExpectValue, mockExpectValue.length))
+                .thenReturn(mockReturn);
+
+        byte[] expect = {0x09,
+                0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,//IDM
+                0x00, 0x00,// status flag 1 and 2
+        };
+
+        byte[] result = target.writeWithoutEncryption(testIdm,
+                testServiceCodeList, testBlockList, testBlockSize, testBlockData, 110);
+
+        assertTrue(Arrays.equals(result, expect));
+
+    }
+
+    /**
+     * Illigal Idm value less than 8.
+     */
+    @Test
+    public void AbnormalwriteWithoutEncryption01() {
+        byte[] testIdm = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+        byte[] testServiceCodeList = {0x00, 0x00, 0x00, 0x00};
+        byte[] testBlockList = {(byte) 0x80, 0x00, 0x01, 0x01, 0x01};//A block is 2byte or 3byte
+        int testBlockSize = 2;
+        byte[] testBlockData = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+                0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+
+
+        String expect = "Must be idm Length is just 8 byte but idm length is 7";
+
+        try {
+            byte[] result = target.writeWithoutEncryption(testIdm,
+                    testServiceCodeList, testBlockList, testBlockSize, testBlockData, 110);
+            fail();
+        } catch (IlligalParameterTypeException e) {
+            assertThat(e.getMessage(), is(expect));
+        }
+
+    }
+
+    /**
+     * Illigal Idm value more than 8.
+     */
+    @Test
+    public void AbnormalwriteWithoutEncryption02() {
+        byte[] testIdm = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+        byte[] testServiceCodeList = {0x00, 0x00, 0x00, 0x00};
+        byte[] testBlockList = {(byte) 0x80, 0x00, 0x01, 0x01, 0x01};//A block is 2byte or 3byte
+        int testBlockSize = 2;
+        byte[] testBlockData = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+                0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+
+        String expect = "Must be idm Length is just 8 byte but idm length is 9";
+
+        try {
+            byte[] result = target.writeWithoutEncryption(testIdm,
+                    testServiceCodeList, testBlockList, testBlockSize, testBlockData, 110);
+            fail();
+        } catch (IlligalParameterTypeException e) {
+            assertThat(e.getMessage(), is(expect));
+        }
+
+    }
+
+
+    /**
+     * Illigal testService code empty.
+     */
+    @Test
+    public void AbnormalwriteWithoutEncryption03() {
+        byte[] testIdm = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+        byte[] testServiceCodeList = {};
+        byte[] testBlockList = {(byte) 0x80, 0x00, 0x01, 0x01, 0x01};//A block is 2byte or 3byte
+        int testBlockSize = 2;
+        byte[] testBlockData = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+                0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+
+
+        String expect = "Must be service code list length is 2 to 32 but length is 0";
+
+        try {
+            byte[] result = target.writeWithoutEncryption(testIdm,
+                    testServiceCodeList, testBlockList, testBlockSize, testBlockData, 110);
+            fail();
+        } catch (IlligalParameterTypeException e) {
+            assertThat(e.getMessage(), is(expect));
+        }
+
+    }
+
+    /**
+     * Illigal testService length is more than 16(actual is over 32).
+     */
+    @Test
+    public void AbnormalwriteWithoutEncryption04() {
+        byte[] testIdm = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+        byte[] testServiceCodeList = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+                0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+                0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+                0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};// length / 2 =16
+        byte[] testBlockList = {(byte) 0x80, 0x00, 0x01, 0x01, 0x01};//A block is 2byte or 3byte
+        int testBlockSize = 2;
+        byte[] testBlockData = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+                0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+
+
+        String expect = "Must be service code list length is 2 to 32 but length is 33";
+
+        try {
+            byte[] result = target.writeWithoutEncryption(testIdm,
+                    testServiceCodeList, testBlockList, testBlockSize, testBlockData, 110);
+            fail();
+        } catch (IlligalParameterTypeException e) {
+            assertThat(e.getMessage(), is(expect));
+        }
+
+    }
+
+    /**
+     * Illigal testService length is less than 2.
+     */
+    @Test
+    public void AbnormalwriteWithoutEncryption05() {
+        byte[] testIdm = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+        byte[] testServiceCodeList = {0x00};
+        byte[] testBlockList = {(byte) 0x80, 0x00, 0x01, 0x01, 0x01};//A block is 2byte or 3byte
+        int testBlockSize = 2;
+        byte[] testBlockData = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+                0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+
+        String expect = "Must be service code list length is 2 to 32 but length is 1";
+
+        try {
+            byte[] result = target.writeWithoutEncryption(testIdm,
+                    testServiceCodeList, testBlockList, testBlockSize, testBlockData, 110);
+            fail();
+        } catch (IlligalParameterTypeException e) {
+            assertThat(e.getMessage(), is(expect));
+        }
+
+    }
+
+    /**
+     * Illigal testService length is odd.
+     */
+    @Test
+    public void AbnormalwriteWithoutEncryption06() {
+        byte[] testIdm = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+        byte[] testServiceCodeList = {0x00, 0x00, 0x00};
+        byte[] testBlockList = {(byte) 0x80, 0x00, 0x01, 0x01, 0x01};//A block is 2byte or 3byte
+        int testBlockSize = 2;
+        byte[] testBlockData = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+                0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+
+
+        String expect = "Must be service code list length is Even but length is 3";
+
+        try {
+            byte[] result = target.writeWithoutEncryption(testIdm,
+                    testServiceCodeList, testBlockList, testBlockSize, testBlockData, 110);
+            fail();
+        } catch (IlligalParameterTypeException e) {
+            assertThat(e.getMessage(), is(expect));
+        }
+
+    }
+
+    /**
+     * Illigal block list length. block list is 2 block (2 byte and 3 byte) but size is 1
+     */
+    @Test
+    public void AbnormalwriteWithoutEncryption07() {
+        byte[] testIdm = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+        byte[] testServiceCodeList = {0x00, 0x00, 0x00, 0x00};
+        byte[] testBlockList = {(byte) 0x80, 0x00, 0x01, 0x01, 0x01};//A block is 2byte or 3byte
+        int testBlockSize = 1;
+        byte[] testBlockData = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+
+
+        String expect = "Wrong block number. you specific : 1";
+
+        try {
+            byte[] result = target.writeWithoutEncryption(testIdm,
+                    testServiceCodeList, testBlockList, testBlockSize, testBlockData, 110);
+            fail();
+        } catch (IlligalParameterTypeException e) {
+            assertThat(e.getMessage(), is(expect));
+        }
+
+    }
+
+    /**
+     * Illigal block list length. block list is 2 block (2 byte and 2 byte) but size is 1
+     */
+    @Test
+    public void AbnormalwriteWithoutEncryption08() {
+        byte[] testIdm = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+        byte[] testServiceCodeList = {0x00, 0x00, 0x00, 0x00};
+        byte[] testBlockList = {(byte) 0x80, 0x00, (byte) 0x81, 0x01};//A block is 2byte or 3byte
+        int testBlockSize = 1;
+        byte[] testBlockData = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+
+        String expect = "Wrong block number. you specific : 1";
+
+        try {
+            byte[] result = target.writeWithoutEncryption(testIdm,
+                    testServiceCodeList, testBlockList, testBlockSize, testBlockData, 110);
+            fail();
+        } catch (IlligalParameterTypeException e) {
+            assertThat(e.getMessage(), is(expect));
+        }
+
+    }
+
+    /**
+     * Illigal block list length. block list is 3 block (2 byte and 3 byte) but size is 1
+     */
+    @Test
+    public void AbnormalwriteWithoutEncryption09() {
+        byte[] testIdm = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+        byte[] testServiceCodeList = {0x00, 0x00, 0x00, 0x00};
+        byte[] testBlockList = {(byte) 0x80, 0x00, 0x01, 0x01, 0x01};//A block is 2byte or 3byte
+        int testBlockSize = 3;
+        byte[] testBlockData = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+                0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+                0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+
+        String expect = "Wrong block number. you specific : 3";
+
+        try {
+            byte[] result = target.writeWithoutEncryption(testIdm,
+                    testServiceCodeList, testBlockList, testBlockSize, testBlockData, 110);
+            fail();
+        } catch (IlligalParameterTypeException e) {
+            assertThat(e.getMessage(), is(expect));
+        }
+
+    }
+
+    /**
+     * Illigal block list length. block list is 3 block (3 byte and 3 byte) but size is 1
+     */
+    @Test
+    public void AbnormalwriteWithoutEncryption10() {
+        byte[] testIdm = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+        byte[] testServiceCodeList = {0x00, 0x00, 0x00, 0x00};
+        byte[] testBlockList = {0x00, 0x00, 0x00, 0x01, 0x01, 0x01};//2 block element(3byte )
+        int testBlockSize = 3;
+        byte[] testBlockData = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+                0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+                0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+
+        String expect = "Wrong block number. you specific : 3";
+
+        try {
+            byte[] result = target.writeWithoutEncryption(testIdm,
+                    testServiceCodeList, testBlockList, testBlockSize, testBlockData, 110);
+            fail();
+        } catch (IlligalParameterTypeException e) {
+            assertThat(e.getMessage(), is(expect));
+        }
+
+    }
+
+    /**
+     * Illigal block list length. block list is 3 block (2 byte and 2 byte) but size is 1
+     */
+    @Test
+    public void AbnormalwriteWithoutEncryption11() {
+        byte[] testIdm = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+        byte[] testServiceCodeList = {0x00, 0x00, 0x00, 0x00};
+        byte[] testBlockList = {(byte) 0x80, 0x00, (byte) 0x81, 0x01};//A block is 2byte or 3byte
+        int testBlockSize = 3;
+        byte[] testBlockData = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+                0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+                0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+
+        String expect = "Wrong block number. you specific : 3";
+
+        try {
+            byte[] result = target.writeWithoutEncryption(testIdm,
+                    testServiceCodeList, testBlockList, testBlockSize, testBlockData, 110);
+            fail();
+        } catch (IlligalParameterTypeException e) {
+            assertThat(e.getMessage(), is(expect));
+        }
+
+    }
+
+    /**
+     * BlockList length is illigal. too long.
+     */
+    @Test
+    public void AbnormalwriteWithoutEncryption12() {
+        byte[] testIdm = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+        byte[] testServiceCodeList = {0x00, 0x00, 0x00, 0x00};
+        byte[] testBlockList = {(byte) 0x80, 0x00, (byte) 0x81, 0x01, 0x02};//A block is 2byte or 3byte
+        int testBlockSize = 2;
+        byte[] testBlockData = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+                0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+
+
+        String expect = "Illigal block list byte length.";
+
+        try {
+            byte[] result = target.writeWithoutEncryption(testIdm,
+                    testServiceCodeList, testBlockList, testBlockSize, testBlockData, 110);
+            fail();
+        } catch (IlligalParameterTypeException e) {
+            assertThat(e.getMessage(), is(expect));
+        }
+
+    }
+
+    /**
+     * Illigal block list length. block list is 3 block (2 byte and 2 byte) but size is 1
+     */
+    @Test
+    public void AbnormalwriteWithoutEncryption13() {
+        byte[] testIdm = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+        byte[] testServiceCodeList = {0x00, 0x00, 0x00, 0x00};
+        byte[] testBlockList = {(byte) 0x80, 0x00, (byte) 0x81};//A block is 2byte or 3byte
+        int testBlockSize = 2;
+        byte[] testBlockData = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+                0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+
+
+        String expect = "Illigal block list byte length.";
+
+        try {
+            byte[] result = target.writeWithoutEncryption(testIdm,
+                    testServiceCodeList, testBlockList, testBlockSize, testBlockData, 110);
+            fail();
+        } catch (IlligalParameterTypeException e) {
+            assertThat(e.getMessage(), is(expect));
+        }
+
+    }
+
+
+    /**
+     * Illigal block data length. less than block size * 16
+     */
+    @Test
+    public void AbnormalwriteWithoutEncryption14() {
+        byte[] testIdm = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+        byte[] testServiceCodeList = {0x00, 0x00, 0x00, 0x00};
+        byte[] testBlockList = {(byte) 0x80, 0x00, (byte) 0x81, 0x00};//A block is 2byte or 3byte
+        int testBlockSize = 2;
+        byte[] testBlockData = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+                0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+
+
+        String expect = "Illigal block data size, expect size is 32";
+
+        try {
+            byte[] result = target.writeWithoutEncryption(testIdm,
+                    testServiceCodeList, testBlockList, testBlockSize, testBlockData, 110);
+            fail();
+        } catch (IlligalParameterTypeException e) {
+            assertThat(e.getMessage(), is(expect));
+        }
+
+    }
+
+    /**
+     * Illigal block data length. more than block size * 16
+     */
+    @Test
+    public void AbnormalwriteWithoutEncryption15() {
+        byte[] testIdm = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+        byte[] testServiceCodeList = {0x00, 0x00, 0x00, 0x00};
+        byte[] testBlockList = {(byte) 0x80, 0x00, (byte) 0x81, 0x00};//A block is 2byte or 3byte
+        int testBlockSize = 2;
+        byte[] testBlockData = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+                0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+
+
+        String expect = "Illigal block data size, expect size is 32";
+
+        try {
+            byte[] result = target.writeWithoutEncryption(testIdm,
+                    testServiceCodeList, testBlockList, testBlockSize, testBlockData, 110);
+            fail();
+        } catch (IlligalParameterTypeException e) {
+            assertThat(e.getMessage(), is(expect));
+        }
+
+    }
 
 }

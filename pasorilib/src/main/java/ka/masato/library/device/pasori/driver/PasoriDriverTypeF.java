@@ -130,7 +130,7 @@ public class PasoriDriverTypeF extends AbstractPasoriDriver {
         return result;
     }
 
-    public byte[] readWithoutEncription(byte[] idm, byte[] serviceCodeList, byte[] blockList, int blockNumber, int timeout) {
+    public byte[] readWithoutEncryption(byte[] idm, byte[] serviceCodeList, byte[] blockList, int blockNumber, int timeout) {
 
         if (2 > serviceCodeList.length || serviceCodeList.length > 32) {
             throw new IlligalParameterTypeException("Must be service code list length is 2 to 32 but length is "
@@ -165,13 +165,64 @@ public class PasoriDriverTypeF extends AbstractPasoriDriver {
         ByteBuffer cmd = buildRfCommand(rfcmd.array(), timeout);
 
         if (cmd == null) {
-            throw new IlligalParameterTypeException("Failed create cmd payload on send readWithoutEncription.");
+            throw new IlligalParameterTypeException("Failed create cmd payload on send readWithoutEncryption.");
         }
 
         byte[] resultPayload = this.usbPasoriDriver.transferCommand(cmd.array(), cmd.array().length);
         byte[] result = extractRfCommand(resultPayload);
         return result;
 
+    }
+
+    public byte[] writeWithoutEncryption(byte[] idm, byte[] serviceCodeList,
+                                         byte[] blockList, int blockNumber, byte[] blockData, int timeout) {
+
+        if (2 > serviceCodeList.length || serviceCodeList.length > 32) {
+            throw new IlligalParameterTypeException("Must be service code list length is 2 to 32 but length is "
+                    + serviceCodeList.length);
+        }
+
+        if ((serviceCodeList.length % 2) != 0) {
+            throw new IlligalParameterTypeException("Must be service code list length is Even but length is "
+                    + serviceCodeList.length);
+        }
+
+        if (blockNumber != calcNumberofBlock(blockList)) {
+            throw new IlligalParameterTypeException("Wrong block number. you specific : " + blockNumber);
+        }
+
+
+        if ((2 * blockNumber) > blockList.length && blockList.length < (3 * blockNumber)) {
+            throw new IlligalParameterTypeException(" Illigal block list length. check block number or block list. ");
+        }
+
+        int blockDataSize = blockNumber * 16;
+        if (blockData.length != blockDataSize) {
+            throw new IlligalParameterTypeException("Illigal block data size, expect size is " + blockDataSize);
+        }
+
+        if (idm.length != 8) {
+            throw new IlligalParameterTypeException("Must be idm Length is just 8 byte but idm length is " + idm.length);
+        }
+
+        ByteBuffer rfcmd = ByteBuffer.allocate(1 + 8 + 1 + serviceCodeList.length
+                + 1 + blockList.length + (blockNumber * 16));
+        rfcmd.put((byte) 0x08);
+        rfcmd.put(idm);
+        rfcmd.put((byte) ((byte) serviceCodeList.length / 2));
+        rfcmd.put(serviceCodeList);
+        rfcmd.put((byte) blockNumber);
+        rfcmd.put(blockList);
+        rfcmd.put(blockData);
+        ByteBuffer cmd = buildRfCommand(rfcmd.array(), timeout);
+
+        if (cmd == null) {
+            throw new IlligalParameterTypeException("Failed create cmd payload on send writeWithoutEncryption.");
+        }
+
+        byte[] resultPayload = this.usbPasoriDriver.transferCommand(cmd.array(), cmd.array().length);
+        byte[] result = extractRfCommand(resultPayload);
+        return result;
     }
 
     private int calcNumberofBlock(byte[] blockList) {
