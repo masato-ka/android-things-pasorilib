@@ -132,10 +132,20 @@ public class PasoriDriverTypeF extends AbstractPasoriDriver {
 
     public byte[] readWithoutEncription(byte[] idm, byte[] serviceCodeList, byte[] blockList, int blockNumber, int timeout) {
 
-        if (1 > serviceCodeList.length && serviceCodeList.length > 16) {
-            throw new IlligalParameterTypeException("Must be service code list length is 1 to 16 but length is "
+        if (2 > serviceCodeList.length || serviceCodeList.length > 32) {
+            throw new IlligalParameterTypeException("Must be service code list length is 2 to 32 but length is "
                     + serviceCodeList.length);
         }
+
+        if ((serviceCodeList.length % 2) != 0) {
+            throw new IlligalParameterTypeException("Must be service code list length is Even but length is "
+                    + serviceCodeList.length);
+        }
+
+        if (blockNumber != calcNumberofBlock(blockList)) {
+            throw new IlligalParameterTypeException("Wrong block number. you specific : " + blockNumber);
+        }
+
 
         if ((2 * blockNumber) > blockList.length && blockList.length < (3 * blockNumber)) {
             throw new IlligalParameterTypeException(" Illigal block list length. check block number or block list. ");
@@ -145,10 +155,10 @@ public class PasoriDriverTypeF extends AbstractPasoriDriver {
             throw new IlligalParameterTypeException("Must be idm Length is just 8 byte but idm length is " + idm.length);
         }
 
-        ByteBuffer rfcmd = ByteBuffer.allocate(1 + 8 + 1 + (2 * serviceCodeList.length) + 1 + blockList.length);
+        ByteBuffer rfcmd = ByteBuffer.allocate(1 + 8 + 1 + serviceCodeList.length + 1 + blockList.length);
         rfcmd.put((byte) 0x06);
         rfcmd.put(idm);
-        rfcmd.put((byte) serviceCodeList.length);
+        rfcmd.put((byte) ((byte) serviceCodeList.length / 2));
         rfcmd.put(serviceCodeList);
         rfcmd.put((byte) blockNumber);
         rfcmd.put(blockList);
@@ -162,6 +172,29 @@ public class PasoriDriverTypeF extends AbstractPasoriDriver {
         byte[] result = extractRfCommand(resultPayload);
         return result;
 
+    }
+
+    private int calcNumberofBlock(byte[] blockList) {
+
+        ByteBuffer bf = ByteBuffer.wrap(blockList);
+        int length = bf.limit();
+        int position = 0;
+        int count = 0;
+        while (position < length) {
+            bf.position(position);
+            byte d = bf.get();
+            if ((d & 0x80) == 0x80) {
+                position += 2;
+
+            } else {
+                position += 3;
+            }
+            count++;
+        }
+        if (position != length) {
+            throw new IlligalParameterTypeException("Illigal block list byte length.");
+        }
+        return count;
     }
 
     private byte[] extractRfCommand(byte[] resultPayload) {
