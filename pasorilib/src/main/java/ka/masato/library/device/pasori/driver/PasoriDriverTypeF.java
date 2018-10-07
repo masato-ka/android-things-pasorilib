@@ -49,7 +49,9 @@ public class PasoriDriverTypeF extends AbstractPasoriDriver {
             @Override
             public void run() {
                 if (!isStartRead) return;
+
                 byte[] result = pollingNFC(110);
+
                 if (result.length <= 0) {
                 } else {
                     //Get result.
@@ -249,12 +251,18 @@ public class PasoriDriverTypeF extends AbstractPasoriDriver {
     }
 
     private byte[] extractRfCommand(byte[] resultPayload) {
-        byte[] expect = {(byte) 0xD7, (byte) 0x04 + 1, 0x00, 0x00, 0x00};
+        byte[] expect = {(byte) 0xD7, (byte) 0x04 + 1};
         ByteBuffer byteBuffer = ByteBuffer.wrap(resultPayload, 0, 5);
-        byte[] header = new byte[5];
-        byteBuffer.get(header);
-        if (!Arrays.equals(header, expect)) {
+        byte[] header1 = new byte[2];
+        byteBuffer.get(header1, 0, 2);
+        if (!Arrays.equals(header1, expect)) {
             throw new FailedRfCommunication("RF command Response header is illigal.");
+        }
+        byteBuffer.position(2);
+        byte[] header2 = new byte[3];
+        byteBuffer.get(header2, 0, 3);
+        if (!Arrays.equals(header2, new byte[]{0x00, 0x00, 0x00})) {
+            return new byte[0];
         }
         byteBuffer.clear();
         byteBuffer.position(5);

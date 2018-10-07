@@ -30,6 +30,7 @@ public class CardDataDecoderTest {
     @Test
     public void loadPacketTest01() {
         byte[] testData = {
+                0x00,
                 0x08, //unknown but a part of header.
                 0x14, // data length + me(1)
                 0x01, // data header 0x01 is response of polling.
@@ -57,12 +58,12 @@ public class CardDataDecoderTest {
 
     @Test
     public void loadPacketTest02() {
-        byte[] testData = new byte[129];
+        byte[] testData = new byte[130];
+        testData[0] = 0x00;
+        testData[1] = 0x08;
+        testData[2] = (byte) 0x80;
 
-        testData[0] = 0x08;
-        testData[1] = (byte) 0x80;
-
-        for (int i = 2; i < 129; i++) {
+        for (int i = 3; i < 130; i++) {
             testData[i] = 0x01;
         }
 
@@ -79,11 +80,12 @@ public class CardDataDecoderTest {
 
     @Test
     public void loadPacketTest03() {
-        byte[] testData = new byte[3];
+        byte[] testData = new byte[4];
 
-        testData[0] = 0x08;
-        testData[1] = (byte) 0x02;
-        testData[2] = 0x01;
+        testData[0] = 0x00;
+        testData[1] = 0x08;
+        testData[2] = (byte) 0x02;
+        testData[3] = 0x01;
 
         byte[] expect = new byte[1];
         expect[0] = 0x01;
@@ -150,6 +152,7 @@ public class CardDataDecoderTest {
     @Test
     public void decodeIDm01() {
         byte[] testData = {
+                0x00,
                 0x08, //unknown but a part of header.
                 0x14, // data length + me(1)
                 0x01, // data header 0x01 is response of polling.
@@ -168,6 +171,7 @@ public class CardDataDecoderTest {
     @Test
     public void decodeIDm02() {
         byte[] testData = {
+                0x00,
                 0x08, //unknown but a part of header.
                 0x12, // data length + me(1)
                 0x01, // data header 0x01 is response of polling.
@@ -184,6 +188,7 @@ public class CardDataDecoderTest {
     @Test
     public void AbnormaldecodeIDm01() {
         byte[] testData = {
+                0x00,
                 0x08, //unknown but a part of header.
                 0x14, // data length + me(1)
                 0x00, // data header 0x01 is response of polling.
@@ -221,6 +226,7 @@ public class CardDataDecoderTest {
     @Test
     public void AbnormaldecodeIDm03() {
         byte[] testData = {
+                0x00,
                 0x08, //unknown but a part of header.
                 0x11, // data length + me(1)
                 0x01, // data header 0x01 is response of polling.
@@ -245,6 +251,7 @@ public class CardDataDecoderTest {
     @Test
     public void decodePMm01() {
         byte[] testData = {
+                0x00,
                 0x08, //unknown but a part of header.
                 0x14, // data length + me(1)
                 0x01, // data header 0x01 is response of polling.
@@ -263,6 +270,7 @@ public class CardDataDecoderTest {
     @Test
     public void decodePMm02() {
         byte[] testData = {
+                0x00,
                 0x08, //unknown but a part of header.
                 0x12, // data length + me(1)
                 0x01, // data header 0x01 is response of polling.
@@ -279,6 +287,7 @@ public class CardDataDecoderTest {
     @Test
     public void AbnormaldecodePMm01() {
         byte[] testData = {
+                0x00,
                 0x08, //unknown but a part of header.
                 0x14, // data length + me(1)
                 0x00, // data header 0x01 is response of polling.
@@ -316,6 +325,7 @@ public class CardDataDecoderTest {
     @Test
     public void AbnormaldecodePMm03() {
         byte[] testData = {
+                0x00,
                 0x08, //unknown but a part of header.
                 0x11, // data length + me(1)
                 0x01, // data header 0x01 is response of polling.
@@ -331,6 +341,82 @@ public class CardDataDecoderTest {
 
         try {
             String result = target.loadPacket(testData).decodePMm().getPMm();
+            fail();
+        } catch (CardDataDecodeErrorException e) {
+            assertThat(e.getMessage(), is(expect));
+        }
+    }
+
+    @Test
+    public void decodeRequestResponse01() {
+        byte[] testData = {
+                0x00, 0x08,
+                0x0B,
+                0x05,
+                0x00, 0x00, 0x11, (byte) 0x11, (byte) 0xFF, (byte) 0xFF, (byte) 0xFF, (byte) 0xF5,
+                0x01
+        };
+
+        String expectIdm = "00001111FFFFFFF5";
+        byte expectMode = 0x01;
+
+        byte mode = target.loadPacket(testData).decodeRequestResponse().getMode();
+        String idm = target.getIDm();
+
+        assertThat(mode, is(expectMode));
+        assertThat(idm, is(expectIdm));
+
+    }
+
+    /**
+     * data header illigal
+     */
+    @Test
+    public void AbnormaldecodeRequestResponse01() {
+        byte[] testData = {
+                0x00, 0x08,
+                0x0B,
+                0x06,
+                0x00, 0x00, 0x11, (byte) 0x11, (byte) 0xFF, (byte) 0xFF, (byte) 0xFF, (byte) 0xF5,
+                0x01
+        };
+
+        String expect = "Illigal cmd payload, can not decode request response.";
+
+        try {
+            Byte result = target.loadPacket(testData).decodeRequestResponse().getMode();
+            fail();
+        } catch (CardDataDecodeErrorException e) {
+            assertThat(e.getMessage(), is(expect));
+        }
+    }
+
+    @Test
+    public void AbnormaldecodeRequestResponse02() {
+
+        String expect = "Should not decode before load packet function.";
+
+        try {
+            byte result = target.decodeRequestResponse().getMode();
+            fail();
+        } catch (CardDataDecodeErrorException e) {
+            assertThat(e.getMessage(), is(expect));
+        }
+    }
+
+    @Test
+    public void AbnormaldecodeRequestResponse03() {
+        byte[] testData = {
+                0x00, 0x08,
+                0x08,
+                0x05,
+                0x00, 0x00, 0x11, (byte) 0x11, (byte) 0xFF, (byte) 0xFF
+        };
+
+        String expect = "Can not decode RequestResponse because data length is not 10 byte.";
+
+        try {
+            byte result = target.loadPacket(testData).decodeRequestResponse().getMode();
             fail();
         } catch (CardDataDecodeErrorException e) {
             assertThat(e.getMessage(), is(expect));
