@@ -29,15 +29,17 @@ jobs:
 
     # Download and cache dependencies
     - restore_cache:
-        keys: jars-{{ checksum "build.gradle" }}-{{ checksum  "pasorilib/build.gradle" }}
-
+        keys:
+        - v1-dependencies-{{ checksum "build.gradle" }}-{{ checksum  "pasorilib/build.gradle" }}
+        - v1-dependencies-
     - run:
         name: gradle dependencies
         command: ./gladlew androidDependencies
 
     - save_cache:
-        paths: ~/.gradle
-        keys: jars-{{ checksum "build.gradle" }}-{{ checksum  "pasorilib/build.gradle" }}
+        paths:
+        - ~/.gradle
+        keys: -v1-dependencies-{{ checksum "build.gradle" }}-{{ checksum  "pasorilib/build.gradle" }}
 
     # run tests!
     - run:
