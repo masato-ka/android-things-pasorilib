@@ -36,8 +36,7 @@ jobs:
         command: ./gladlew androidDependencies
 
     - save_cache:
-        paths:
-        - ~/.gradle
+        paths: ~/.gradle
         keys: jars-{{ checksum "build.gradle" }}-{{ checksum  "pasorilib/build.gradle" }}
 
     # run tests!
