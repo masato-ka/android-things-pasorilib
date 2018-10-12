@@ -39,7 +39,7 @@ jobs:
     - save_cache:
         paths:
         - ~/.gradle
-        keys: -v1-dependencies-{{ checksum "build.gradle" }}-{{ checksum  "pasorilib/build.gradle" }}
+        key: -v1-dependencies-{{ checksum "build.gradle" }}-{{ checksum  "pasorilib/build.gradle" }}
 
     # run tests!
     - run:
