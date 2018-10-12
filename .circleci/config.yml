@@ -48,6 +48,8 @@ jobs:
           ./gradlew test
           ./gradlew test lint
 
+    - store_test_results:
+        path: pasorilib/build/test-results
 
 
 
