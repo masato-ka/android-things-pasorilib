@@ -34,7 +34,7 @@ jobs:
         - v1-dependencies-
     - run:
         name: gradle dependencies
-        command: ./gladlew androidDependencies
+        command: ./gradlew androidDependencies
 
     - save_cache:
         paths:
@@ -45,8 +45,8 @@ jobs:
     - run:
         name: gradle test
         command:
-          ./gladlew test
-          ./gladlew test lint
+          ./gradlew test
+          ./gradlew test lint
 
 
 
