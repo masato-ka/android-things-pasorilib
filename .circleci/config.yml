@@ -45,8 +45,8 @@ jobs:
     - run:
         name: gradle test
         command:
-          ./gradlew test
-          ./gradlew test lint
+        - ./gradlew test
+        - ./gradlew test lint
 
 
 
